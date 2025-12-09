@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Petualangan Kalananti - Mulai Main!</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --blue-main: #0f4c81;
+            --blue-dark: #0a355c;
+            --blue-soft: #74c6d6;
+            --yellow: #f0d28a;
+            --orange: #d29a46;
+            --green: #4caf50;
+            --radius-xl: 32px;
+            --shadow: 0 20px 50px rgba(15, 47, 70, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: "Lexend", sans-serif;
+            /* Default to Lexend for kids */
+            /* Fixed gradient background */
+            background: linear-gradient(180deg, #dff4f8 0%, #b8e6f0 100%) fixed;
+            color: var(--text-main);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            /* App-like feel */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- VISUALS --- */
+
+        /* Fixed Background Landscape props */
+        .bg-decor {
+            position: fixed;
+            bottom: 0;
+            z-index: 1;
+            width: 50%;
+            max-width: 600px;
+            pointer-events: none;
+        }
+
+        .bg-decor.left {
+            left: -5%;
+        }
+
+        .bg-decor.right {
+            right: -5%;
+        }
+
+        /* Floating Characters - Now outside the card */
+        .char-img {
+            position: absolute;
+            z-index: 20;
+            /* Above slide */
+            width: 180px;
+            /* Bigger */
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+            animation: float 3s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+
+        .char-kala {
+            bottom: 10%;
+            left: -80px;
+            /* Overlap left edge */
+            animation-delay: 0s;
+        }
+
+        .char-nana {
+            bottom: 10%;
+            right: -80px;
+            /* Overlap right edge */
+            animation-delay: 1.5s;
+        }
+
+        @media (max-width: 900px) {
+            .char-kala {
+                left: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+
+            .char-nana {
+                right: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Top Bar Logos */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .logo-rgc {
+            height: 80px;
+            width: auto;
+        }
+
+        .logo-hp {
+            height: 100px;
+            width: auto;
+        }
+
+        /* --- LAYOUT --- */
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            /* Container constraints for character positioning */
+            height: 100%;
+            position: relative;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .slide {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow);
+            border: 4px solid #fff;
+
+            width: 90%;
+            max-width: 700px;
+            /* WIDER CARD as requested */
+            height: 80%;
+            /* Fixed height window */
+            max-height: 700px;
+
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.9) translateY(40px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* pointer-events handled by active class */
+            pointer-events: none;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            /* Center everything */
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            /* Hide scrollbar for clean look */
+            z-index: 10;
+        }
+
+        .slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: scale(0.9) translateY(-40px);
+            pointer-events: none;
+        }
+
+        /* --- CONTENT TYPOGRAPHY --- */
+
+        h1 {
+            color: var(--blue-dark);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        h2 {
+            color: var(--orange);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .main-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        /* --- FORM ELEMENTS --- */
+
+        .form-content {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            /* Keep labels aligned left for readability */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--blue-dark);
+            margin-left: 0.5rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 3px solid #cfe6ed;
+            background: #f8fdfe;
+            font-size: 1.1rem;
+            color: var(--blue-dark);
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+            /* Kid friendly center input */
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--blue-soft);
+            box-shadow: 0 0 0 5px rgba(116, 198, 214, 0.2);
+            background: #fff;
+            outline: none;
+        }
+
+        /* --- BUTTONS --- */
+
+        .btn-primary {
+            background: linear-gradient(180deg, var(--orange) 0%, #c48b36 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 99px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 8px 0 #9e6d23, 0 15px 20px rgba(0, 0, 0, 0.15);
+            /* 3D Button style */
+            transition: all 0.15s;
+            margin-top: 1rem;
+            position: relative;
+            top: 0;
+        }
+
+        .btn-primary:active {
+            top: 6px;
+            box-shadow: 0 2px 0 #9e6d23, 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- QUIZ --- */
+
+        .quiz-container {
+            width: 100%;
+        }
+
+        .question-card {
+            background: #f0f9fb;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 3px solid #e1f0f5;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: var(--blue-dark);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Center contents */
+            gap: 0.8rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 16px;
+            border: 3px solid #eef6f8;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .option-label:hover {
+            transform: scale(1.02);
+            border-color: var(--blue-soft);
+        }
+
+        .option-label.selected {
+            background: #eaf8fc;
+            border-color: var(--blue-main);
+            box-shadow: 0 4px 12px rgba(15, 76, 129, 0.1);
+        }
+
+        .option-label input[type="radio"] {
+            display: none;
+            /* Hide default radio */
+            /* Custom radio visual could be added here if needed, but 'selected' class handles style */
+        }
+
+        .option-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--blue-main);
+        }
+
+        /* MOBILE ADJUSTMENTS */
+        @media (max-width: 768px) {
+            .char-img {
+                width: 90px;
+                bottom: 125px;
+                /* Move up slightly to frame content */
+                z-index: 25;
+            }
+
+            .char-kala {
+                left: -15px;
+            }
+
+            .char-nana {
+                right: -15px;
+            }
+
+            .slide {
+                width: 92%;
+                height: 82dvh;
+                max-height: none;
+                padding: 1.5rem 1.2rem 6rem 1.2rem;
+                /* Huge bottom padding for characters */
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-top: 3rem;
+                /* Space for logos */
+            }
+
+            .logo-hp {
+                height: 60px;
+                /* Reduced slightly from 80px for better fit */
+            }
+
+            .logo-rgc {
+                height: 50px;
+                /* Reduced slightly from 64px */
+            }
+
+            .option-label {
+                padding: 1.2rem;
+                /* Larger touch target */
+            }
+        }
+
+        /* --- CUSTOM MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border: 4px solid #eef6f8;
+            box-shadow: 0 20px 60px rgba(15, 47, 70, 0.25);
+            border-radius: 28px;
+            padding: 2.5rem 2rem;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.open .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-text {
+            color: var(--blue-main);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .btn-close-modal {
+            background: linear-gradient(180deg, var(--green) 0%, #388e3c 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 99px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #2e7d32, 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.15s;
+        }
+
+        .btn-close-modal:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #2e7d32;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Logos (Fixed) -->
+    <div class="top-bar">
+        <div class="logo-group-left">
+            <img src="https://images2.imgbox.com/fa/56/9k95juiz_o.png" alt="RGC Logos" class="logo-rgc">
+        </div>
+        <div class="logo-group-right">
+            <img src="https://images2.imgbox.com/8c/75/ZLUyHG3a_o.png" alt="Holiday Program" class="logo-hp">
+        </div>
+    </div>
+
+    <!-- Backgrounds (Fixed) -->
+    <img src="https://images2.imgbox.com/5b/31/fVZUqaYf_o.png" alt="Mountain" class="bg-decor left">
+    <img src="https://images2.imgbox.com/08/b3/ikRdSaUJ_o.png" alt="Beach" class="bg-decor right">
+
+    <div class="app-container">
+
+        <!-- Characters (Outside Slide, in Container) -->
+        <img src="https://images2.imgbox.com/04/88/JCqNLSYT_o.png" alt="Kala" class="char-img char-kala">
+        <img src="https://images2.imgbox.com/4b/0b/DMWUdruE_o.png" alt="Nana" class="char-img char-nana">
+
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide active" id="slide-intro">
+
+            <img src="https://images2.imgbox.com/54/cf/pZ1hqh81_o.png" alt="Theme Logo" class="main-logo">
+
+            <h1>Halo Teman Baru! 👋</h1>
+            <h2>Ayo kenalan dulu sebelum main!</h2>
+
+            <div class="form-content">
+                <div class="form-group">
+                    <label>Siapa Namamu?</label>
+                    <input type="text" id="input-name" placeholder="Tulis namamu..." autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>Kamu dari Kota mana?</label>
+                    <input type="text" id="input-city" placeholder="Nama kotamu..." autocomplete="off">
+                </div>
+
+                <button class="btn-primary" onclick="startQuiz()">Mulai Main! 🚀</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: QUIZ -->
+        <div class="slide" id="slide-quiz">
+            <h1>Teka-Teki Seru! 🧩</h1>
+            <h2>Coba jawab pertanyaan ini ya!</h2>
+
+            <div class="quiz-container">
+
+                <!-- Q1: Logic/Direction -->
+                <div class="question-card">
+                    <div class="question-text">1. Kalau Monyet mau ambil pisang di <b>atas</b> pohon, dia harus lompat
+                        ke arah mana?</div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="Up">
+                            <img src="https://www.scratchjr.org/images/up.png" alt="Up"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="Jump">
+                            <img src="https://www.scratchjr.org/images/hop.png" alt="Hop"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q2: General Knowledge (West Indo) -->
+                <div class="question-card">
+                    <div class="question-text">2. Orangutan itu hewan pintar yang tinggal di hutan pulau...</div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="Kalimantan">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Administrative_map_of_Borneo_%28Indonesian%29.png"
+                                alt="Kalimantan" style="height: 100px; border-radius: 8px; object-fit: contain;">
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="Bali">
+                            <img src="https://asset.kompas.com/crops/VNanEeGoPhoBY2Df5PfFgkn-pA8=/93x97:653x470/1200x800/data/photo/2022/08/09/62f243a1a00cd.png"
+                                alt="Bali" style="height: 100px; border-radius: 8px; object-fit: contain;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q3: Logic/Pattern -->
+                <div class="question-card">
+                    <div class="question-text">3. Untuk berjalan MAJU (Mulai), biasanya kita pakai blok...</div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="Green">
+                            <img src="https://www.scratchjr.org/images/onflag.png" alt="Start"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="Red">
+                            <img src="https://www.scratchjr.org/images/end.png" alt="End"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q4: Logic/Visual -->
+                <div class="question-card">
+                    <div class="question-text">4. Supaya karakter lari CEPAT sekali, kita pilih gambar...</div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="Fast">
+                            <img src="https://www.scratchjr.org/images/speed.png" alt="Speed"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="Slow">
+                            <img src="https://www.scratchjr.org/images/wait.png" alt="Wait"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q5: Coding/Loop -->
+                <div class="question-card">
+                    <div class="question-text">5. Kalau mau gerakan diulang TERUS-MENERUS, pakai blok...</div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="Loop">
+                            <img src="https://www.scratchjr.org/images/repeat.png" alt="Loop"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="Stop">
+                            <img src="https://www.scratchjr.org/images/stop.png" alt="Stop"
+                                style="height: 80px; object-fit: contain;">
+                        </label>
+                    </div>
+                </div>
+
+                <div style="height: 1rem;"></div> <!-- Spacer -->
+                <button class="btn-primary" onclick="submitTest()">Kirim Jawaban! 🌟</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CUSTOM MODAL HTML -->
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-card">
+            <div class="modal-text" id="modal-message">Pesan disini...</div>
+            <button class="btn-close-modal" onclick="hideModal()">Oke! 👍</button>
+        </div>
+    </div>
+
+    <script>
+        // Data Store
+        const userData = {
+            name: '',
+            city: '',
+            answers: {}
+        };
+
+        // UI Helpers
+        function selectOption(labelElement) {
+            // Find parent group
+            const group = labelElement.parentElement;
+            // Deselect all siblings
+            const siblings = group.querySelectorAll('.option-label');
+            siblings.forEach(el => el.classList.remove('selected'));
+            // Select clicked
+            labelElement.classList.add('selected');
+            // Check the hidden radio
+            const radio = labelElement.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        }
+
+        function showModal(message) {
+            const modalOverlay = document.getElementById('custom-modal');
+            const modalMessage = document.getElementById('modal-message');
+            modalMessage.textContent = message;
+            modalOverlay.classList.add('open');
+        }
+
+        function hideModal() {
+            const modalOverlay = document.getElementById('custom-modal');
+            modalOverlay.classList.remove('open');
+        }
+
+        function startQuiz() {
+            const nameEl = document.getElementById('input-name');
+            const cityEl = document.getElementById('input-city');
+
+            // Quick validation
+            if (!nameEl.value.trim() || !cityEl.value.trim()) {
+                // Shake animation or simple alert
+                showModal("Isi dulu nama kamu ya! 😊");
+                return;
+            }
+
+            userData.name = nameEl.value;
+            userData.city = cityEl.value;
+
+            // Transition
+            const introSlide = document.getElementById('slide-intro');
+            introSlide.classList.add('exit');
+            introSlide.classList.remove('active');
+
+            setTimeout(() => {
+                const quizSlide = document.getElementById('slide-quiz');
+                quizSlide.classList.add('active');
+            }, 400);
+        }
+
+        function submitTest() {
+            // Check answers
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+            const q5 = document.querySelector('input[name="q5"]:checked');
+
+            if (!q1 || !q2 || !q3 || !q4 || !q5) {
+                showModal("Masih ada pertanyaan yang tertingal. Yuk cek lagi! 🧐");
+                return;
+            }
+
+            userData.answers = {
+                q1: q1.value,
+                q2: q2.value,
+                q3: q3.value,
+                q4: q4.value,
+                q5: q5.value,
+            };
+
+            // Final message
+            showModal(`Hore! Selamat ${userData.name}! \nKamu sudah siap berpetualang! 🎉`);
+            console.log("Submitted Data:", userData);
+        }
+    </script>
+</body>
+
+</html>

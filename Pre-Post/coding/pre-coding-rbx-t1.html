@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Petualangan Roblox Nusantara - Mulai Main!</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Purple Night / Roblox Mystical Theme */
+            /* Adjusted for better harmony */
+            --purple-bg-grad-start: #2b2046;
+            /* Deep violet */
+            --purple-bg-grad-end: #171123;
+            /* Almost black violet */
+
+            --purple-card: rgba(35, 25, 50, 0.85);
+            /* Deep purple glass */
+
+            --blue-main: #a29bfe;
+            /* Lighter lavender accent */
+            --text-light: #F2F4F5;
+            --yellow: #dfe6e9;
+            /* Softer text */
+
+            /* Button Colors - Gold/Orange pops on Purple */
+            --btn-grad-start: #f0932b;
+            /* Orange */
+            --btn-grad-end: #b33939;
+            /* Reddish/Dark Orange shadow */
+
+            --radius-xl: 32px;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: "Lexend", sans-serif;
+            /* Deep mystical purple gradient */
+            background: linear-gradient(180deg, var(--purple-bg-grad-start) 0%, var(--purple-bg-grad-end) 100%) fixed;
+            color: var(--text-light);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- VISUALS --- */
+
+        /* Fixed Background Landscape props - Indonesia Theme */
+        .bg-decor {
+            position: fixed;
+            bottom: 0;
+            z-index: 1;
+            width: 50%;
+            max-width: 600px;
+            pointer-events: none;
+            /* Monotone purple tint */
+            filter: grayscale(100%) sepia(100%) hue-rotate(220deg) brightness(0.4) contrast(1.2);
+            opacity: 0.6;
+        }
+
+        .bg-decor.left {
+            left: -5%;
+        }
+
+        .bg-decor.right {
+            right: -5%;
+        }
+
+        /* Floating Characters - Roblox Avatars or Kala/Nana */
+        .char-img {
+            position: absolute;
+            z-index: 20;
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+            animation: float 3s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+
+        .char-kala {
+            bottom: 10%;
+            left: -80px;
+            animation-delay: 0s;
+        }
+
+        .char-nana {
+            bottom: 10%;
+            right: -80px;
+            animation-delay: 1.5s;
+        }
+
+        @media (max-width: 900px) {
+            .char-kala {
+                left: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+
+            .char-nana {
+                right: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Top Bar Logos */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .logo-rgc {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        .logo-hp {
+            height: 100px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        /* --- LAYOUT --- */
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            position: relative;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .slide {
+            /* DEEP PURPLE GLASS */
+            background: var(--purple-card);
+            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+
+            width: 90%;
+            max-width: 700px;
+            height: 80%;
+            max-height: 700px;
+
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.9) translateY(40px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            z-index: 10;
+        }
+
+        .slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: scale(0.9) translateY(-40px);
+            pointer-events: none;
+        }
+
+        /* --- CONTENT TYPOGRAPHY --- */
+
+        h1 {
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: var(--blue-main);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            opacity: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .main-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        /* --- FORM ELEMENTS --- */
+
+        .form-content {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--blue-main);
+            margin-left: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        /* --- BUTTONS --- */
+
+        .btn-primary {
+            /* Solid Gold/Orange Gradient - No Green Clash */
+            background: linear-gradient(180deg, var(--btn-grad-start) 0%, var(--btn-grad-end) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 99px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            /* Darker orange/red shadow */
+            box-shadow: 0 6px 0 #8c2e2e, 0 12px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.15s;
+            margin-top: 1rem;
+            position: relative;
+            top: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:active {
+            top: 6px;
+            box-shadow: 0 0 0 #8c2e2e, 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- QUIZ --- */
+
+        .quiz-container {
+            width: 100%;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option-label:hover {
+            transform: scale(1.02);
+            border-color: var(--blue-main);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .option-label.selected {
+            background: rgba(0, 162, 255, 0.2);
+            border-color: var(--blue-main);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-label input[type="radio"] {
+            display: none;
+        }
+
+        .option-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* MOBILE ADJUSTMENTS */
+        @media (max-width: 900px) {
+            .char-img {
+                width: 90px;
+                bottom: 125px;
+                z-index: 25;
+            }
+
+            /* Kala Nana Side positions are controlled by .char-kala .char-nana media queries above */
+
+            .slide {
+                width: 92%;
+                height: 82dvh;
+                max-height: none;
+                padding: 1.5rem 1.2rem 6rem 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-top: 3rem;
+            }
+
+            .logo-hp {
+                height: 60px;
+            }
+
+            .logo-rgc {
+                height: 50px;
+            }
+
+            .option-label {
+                padding: 1.2rem;
+            }
+        }
+
+        /* --- CUSTOM MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(20, 25, 30, 0.95);
+            padding: 2rem;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+            width: 320px;
+        }
+
+        .modal-overlay.open .modal-card {
+            transform: scale(1);
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
+        /* SEARCHABLE DROPDOWN CSS */
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(20, 25, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-top: 5px;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 162, 255, 0.3);
+        }
+
+        .modal-text {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .btn-close-modal {
+            background: linear-gradient(180deg, #ff5e62 0%, #ff9966 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 99px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #c0392b, 0 8px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.15s;
+        }
+
+
+
+        .btn-close-modal:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #c0392b;
+        }
+
+        /* Select Styling */
+        select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+            appearance: none;
+            /* remove default arrow */
+            /* Custom arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a29bfe%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1.2rem top 50%;
+            background-size: 0.8rem auto;
+        }
+
+        select:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.2);
+            background-color: rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Logos (Fixed) -->
+    <div class="top-bar">
+        <div class="logo-group-left">
+            <img src="https://images2.imgbox.com/fa/56/9k95juiz_o.png" alt="RGC Logos" class="logo-rgc">
+        </div>
+        <div class="logo-group-right">
+            <img src="https://images2.imgbox.com/8c/75/ZLUyHG3a_o.png" alt="Holiday Program" class="logo-hp">
+        </div>
+    </div>
+
+    <!-- Backgrounds (Fixed) -->
+    <img src="https://images2.imgbox.com/5b/31/fVZUqaYf_o.png" alt="Mountain" class="bg-decor left">
+    <img src="https://images2.imgbox.com/08/b3/ikRdSaUJ_o.png" alt="Beach" class="bg-decor right">
+
+    <div class="app-container">
+
+        <!-- Characters (Outside Slide, in Container) -->
+        <img src="https://images2.imgbox.com/04/88/JCqNLSYT_o.png" alt="Kala" class="char-img char-kala">
+        <img src="https://images2.imgbox.com/4b/0b/DMWUdruE_o.png" alt="Nana" class="char-img char-nana">
+
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide active" id="slide-intro">
+
+            <img src="https://images2.imgbox.com/54/cf/pZ1hqh81_o.png" alt="Theme Logo" class="main-logo">
+
+            <h1>Misi: Ekspedisi Nusantara! 🗺️</h1>
+            <h2>Siap keliling Kalimantan & Sumatera cari artefak?</h2>
+
+            <div class="form-content">
+                <!-- 1. MODE (First Step) -->
+                <div class="form-group" id="group-mode">
+                    <label>Pilih Mode Belajar:</label>
+                    <select id="input-mode" onchange="handleModeChange()">
+                        <option value="" disabled selected>Pilih Mode...</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                    </select>
+                </div>
+
+                <!-- 2. PROGRAM (Second Step) -->
+                <div class="form-group" id="group-program" style="display:none;">
+                    <label>Program Kamu:</label>
+                    <select id="input-program" onchange="handleProgramChange()">
+                        <option value="" disabled selected>Pilih Program...</option>
+                        <option value="coding">Coding</option>
+                        <option value="math">Math</option>
+                        <option value="cloc">CLoC</option>
+                    </select>
+                </div>
+
+                <!-- 3a. CITY (Offline Only) -->
+                <div class="form-group" id="group-city" style="display:none;">
+                    <label>Kota Asal:</label>
+                    <select id="input-city" onchange="handleCityChange()">
+                        <option value="" disabled selected>Pilih Kota / Area...</option>
+                    </select>
+                </div>
+
+                <!-- 3b. BRANCH (Offline Only) -->
+                <div class="form-group" id="group-branch" style="display:none;">
+                    <label>Belajar di Cabang mana</label>
+                    <select id="input-branch" onchange="handleBranchChange()">
+                        <option value="" disabled selected>Pilih Cabang...</option>
+                    </select>
+                </div>
+
+                <!-- 4. TEACHER -->
+                <div class="form-group" id="group-teacher" style="display:none;">
+                    <label>Siapa Pengajarnya?</label>
+                    <select id="input-teacher" onchange="handleTeacherChange()">
+                        <option value="" disabled selected>Pilih Guru...</option>
+                    </select>
+                </div>
+
+                <!-- 5. NAME (Final Step) -->
+                <div class="form-group" id="group-name" style="display:none;">
+                    <label>Siapa nama agen penjelajah?</label>
+                    <select id="input-name" onchange="checkFormCompletion()">
+                        <option value="" disabled selected>Pilih Namamu...</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" onclick="startQuiz()" id="btn-start"
+                    style="opacity: 0.5; pointer-events: none;">Mulai Petualangan! 🚀</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: QUIZ -->
+        <div class="slide" id="slide-quiz">
+            <h1>Teka-Teki Artefak! 🏺</h1>
+            <h2>Jawab pertanyaan untuk membuka gerbang!</h2>
+
+            <div class="quiz-container">
+
+                <!-- Q1: Sumbar (House) - Sumatra -->
+                <div class="question-card">
+                    <div class="question-text">
+                        1. Kita mendarat di <b>Sumatera Barat</b>! Wah, ada rumah unik yang atapnya runcing seperti
+                        tanduk kerbau. Ini rumah apa ya?
+                        <br><br>
+                        <img src="https://i.pinimg.com/originals/e8/74/40/e87440b16274383ba87c1de84db2a4dc.png"
+                            alt="Rumah Adat"
+                            style="width: 100%; max-width: 300px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="Gadang">
+                            <span class="option-text">🏠 Rumah Gadang</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="Joglo">
+                            <span class="option-text">🏚️ Rumah Joglo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q2: Kalimantan (House) -->
+                <div class="question-card">
+                    <div class="question-text">
+                        2. Sekarang kita terbang ke <b>Kalimantan</b>! Di sini ada rumah panggung super panjang yang
+                        dihuni banyak satu suku. Namanya...
+                        <br><br>
+                        <img src="https://i.pinimg.com/originals/cb/4c/1b/cb4c1b330e1e71195761bbae709b79d3.png"
+                            alt="Rumah Betang"
+                            style="width: 100%; max-width: 300px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="Betang">
+                            <span class="option-text">🏘️ Rumah Betang</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="Honai">
+                            <span class="option-text">🛖 Rumah Honai</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q3: Roblox Tool 1 (Move) -->
+                <div class="question-card">
+                    <div class="question-text">
+                        3. Kita menemukan patung purba! Untuk <b>menggeser</b> posisi patungnya ke tempat aman, kita
+                        pakai alat yang panahnya warna-warni ini. Namanya apa?
+                        <br><br>
+                        <img src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/6/c/b/6cbf25baa6283b2002876f05a2c43e7cb3aeeeb0.jpeg"
+                            alt="Move Tool"
+                            style="width: 230px; max-width: 250px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="Move">
+                            <span class="option-text">Move (Geser)</sini pan>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="Rotate">
+                            <span class="option-text">Rotate (Putar)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q4: Roblox Tool 2 (Toolbox) -->
+                <div class="question-card">
+                    <div class="question-text">
+                        4. Kita butuh pohon-pohon hutan untuk membuat suasana Borneo di game kita. Tempat mencari model
+                        3D instan di Roblox adalah...
+                        <br><br>
+                        <img src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/optimized/4X/b/b/5/bb50a764d298b975166acfff8651f1a9fd635637_2_690x272.jpeg"
+                            alt="Toolbox"
+                            style="width: 230px; max-width: 250px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="Toolbox">
+                            <span class="option-text">📦 Toolbox</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="Explorer">
+                            <span class="option-text">📂 Explorer</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q5: Coding Simple (Script) -->
+                <div class="question-card">
+                    <div class="question-text">
+                        5. Terakhir! Supaya pintu gerbang candi bisa terbuka otomatis, kita harus memberi perintah
+                        "mantra" (coding). Di Roblox, kita tulis mantra ini di...
+                        <br><br>
+                        <img src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/3/6/0/36096ab8b69a40d0d3ff43ba246a4b4c19ada5e8.png"
+                            alt="Script Icon"
+                            style="width: 230px; max-width: 150px; border-radius: 12px; display: block; margin: 0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="Script">
+                            <span class="option-text">📜 Script</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="Spawn">
+                            <span class="option-text">🏁 Spawn Location</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="height: 1rem;"></div> <!-- Spacer -->
+                <button class="btn-primary" onclick="submitTest()">Kirim Jawaban! 🌟</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CUSTOM MODAL HTML -->
+    <div class="modal-overlay" id="custom-modal" onclick="hideModal()">
+        <div class="modal-card">
+            <div class="modal-text" id="modal-message">Pesan disini...</div>
+        </div>
+    </div>
+    <script>
+        // Data Store
+        const userData = {
+            name: '',
+            mode: '',
+            program: '',
+            city: '',
+            branch: '',
+            teacher: '',
+            answers: {}
+        };
+
+        // Cache for Sheet Data
+        let appData = null;
+
+        // Web App URL for data
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyLEBGpAri8cZSDHeOoJRzf7-3c8RKHH1zNP2A4Fkl54NXROhFpegTYM3mEAL02Y_Co/exec";
+
+        window.onload = function () {
+            // Fetch data from GAS Web App
+            console.log("Fetching data from GAS...");
+
+            fetch(GAS_URL)
+                .then(response => response.json())
+                .then(data => {
+                    onDataReceived(data);
+                })
+                .catch(err => {
+                    onDataFail(err);
+                });
+        };
+
+        // AUTO TRIGGER
+        // If data arrives and Program is selected -> Trigger Program Change (which reveals Mode)
+        function onDataReceived(data) {
+            console.log("Data Received:", data);
+            appData = data;
+
+            // Auto close modal if it's open
+            hideModal();
+
+            // Check if user already waiting (selected program but data wasn't there)
+            const inputMode = document.getElementById('input-mode');
+            if (inputMode.value && inputMode.value !== "") {
+                handleModeChange();
+            }
+        }
+
+        function onDataFail(err) {
+            console.error(err);
+            // Fallback for dev or error
+            // showModal("Gagal mengambil data. Coba refresh ya!");
+            console.warn("Using offline mock data due to fetch error.");
+
+            // Mock data for fallback ensuring flow works even if GAS fails permissions
+            /*
+             appData = {
+                branches: {
+                    coding: { "Jakarta": ["Kemang Mock"] },
+                    math: { "Jakarta": ["Tebet Mock"] },
+                    cloc: {}
+                },
+                teachers: {
+                    coding: [{city: "Jakarta", value: "Kak Mock"}],
+                    math: [],
+                    cloc: []
+                }
+            };
+            */
+            showModal("Koneksi ke server data terhambat. Coba refresh/muat ulang halaman ya! 😥");
+        }
+
+        // --- CASCADING LOGIC ---
+
+        function handleModeChange() {
+            const mode = document.getElementById('input-mode').value;
+
+            // Ensure Program is visible
+            document.getElementById('group-program').style.display = 'block';
+
+            // If we change mode, we should perhaps re-evaluate the next steps.
+            // If Program is NOT selected, we wait.
+            // If Program IS selected, we must refresh downstream (e.g. Online->Offline requires City).
+
+            const progSelect = document.getElementById('input-program');
+            if (progSelect.value && progSelect.value !== "") {
+                handleProgramChange();
+            } else {
+                // If no program selected yet, ensure downstream is hidden
+                resetBelowProgram();
+            }
+        }
+
+        // Removed resetBelowMode as it was causing visibility issues.
+
+
+        function handleProgramChange() {
+            const mode = document.getElementById('input-mode').value;
+            const prog = document.getElementById('input-program').value;
+
+            if (!appData) {
+                showModal("Data sedang dimuat... Tunggu sebentar ya! <span class='spinner'>⏳</span>");
+                return;
+            }
+
+            // Reset downstream from Program
+            resetBelowProgram();
+
+            if (mode === 'Online') {
+                // Online Flow: Program -> Teacher
+                populateOnlineTeachers(prog);
+            } else if (mode === 'Offline') {
+                // Offline Flow: Program -> City
+                populateCities(prog);
+            }
+        }
+
+        function populateCities(prog) {
+            const citySelect = document.getElementById('input-city');
+            citySelect.innerHTML = '<option value="" disabled selected>Pilih Kota / Area...</option>';
+
+            const cityMap = appData.branches[prog] || {};
+            const cities = Object.keys(cityMap);
+
+            cities.forEach(city => {
+                const opt = document.createElement('option');
+                opt.value = city;
+                opt.textContent = city;
+                citySelect.appendChild(opt);
+            });
+
+            document.getElementById('group-city').style.display = 'block';
+        }
+
+        function handleCityChange() {
+            const prog = document.getElementById('input-program').value;
+            const city = document.getElementById('input-city').value;
+
+            // Offline: Populate Branch
+            const branchSelect = document.getElementById('input-branch');
+            branchSelect.innerHTML = '<option value="" disabled selected>Pilih Cabang...</option>';
+
+            const branches = appData.branches[prog][city] || [];
+            branches.forEach(br => {
+                const opt = document.createElement('option');
+                opt.value = br;
+                opt.textContent = br;
+                branchSelect.appendChild(opt);
+            });
+
+            document.getElementById('group-branch').style.display = 'block';
+
+            // Reset downstream
+            document.getElementById('group-teacher').style.display = 'none';
+            document.getElementById('input-teacher').value = "";
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+        }
+
+        function handleBranchChange() {
+            const prog = document.getElementById('input-program').value;
+            const city = document.getElementById('input-city').value;
+            const branch = document.getElementById('input-branch').value;
+
+            // Offline: Populate Teacher
+            populateTeachers(prog, city, branch);
+
+            // Reset Name
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+        }
+
+        function handleTeacherChange() {
+            // Show Name Dropdown
+            populateStudentNames();
+            document.getElementById('group-name').style.display = 'block';
+            checkFormCompletion();
+        }
+
+        function populateTeachers(prog, city, branch) {
+            // OFFLINE POPULATE
+            const teacherSelect = document.getElementById('input-teacher');
+            teacherSelect.innerHTML = '<option value="" disabled selected>Pilih Guru...</option>';
+
+            const allTeachers = appData.teachers[prog] || [];
+
+            const filteredTeachers = allTeachers.filter(t => {
+                const key = (t.city || "").toLowerCase();
+                const searchCity = (city || "").trim().toLowerCase();
+                const searchBranch = (branch || "").trim().toLowerCase();
+
+                // Filter by both City and Branch (since t.city contains "City - Branch")
+                return key.includes(searchCity) && key.includes(searchBranch);
+            });
+
+            if (filteredTeachers.length === 0) {
+                const opt = document.createElement('option');
+                opt.textContent = "(Tidak ada guru data)";
+                teacherSelect.appendChild(opt);
+            } else {
+                filteredTeachers.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.value;
+                    opt.textContent = t.value;
+                    teacherSelect.appendChild(opt);
+                });
+            }
+            document.getElementById('group-teacher').style.display = 'block';
+        }
+
+        function populateOnlineTeachers(prog) {
+            // ONLINE POPULATE
+            const teacherSelect = document.getElementById('input-teacher');
+            teacherSelect.innerHTML = '<option value="" disabled selected>Pilih Guru...</option>';
+
+            const onlineList = appData.onlineTeachers[prog] || [];
+
+            if (onlineList.length === 0) {
+                const opt = document.createElement('option');
+                opt.textContent = "(Tidak ada guru online)";
+                teacherSelect.appendChild(opt);
+            } else {
+                onlineList.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    teacherSelect.appendChild(opt);
+                });
+            }
+            document.getElementById('group-teacher').style.display = 'block';
+        }
+
+
+        // resetBelowMode removed
+
+
+        function resetBelowProgram() {
+            document.getElementById('group-city').style.display = 'none';
+            document.getElementById('input-city').value = "";
+
+            document.getElementById('group-branch').style.display = 'none';
+            document.getElementById('input-branch').value = "";
+
+            document.getElementById('group-teacher').style.display = 'none';
+            document.getElementById('input-teacher').value = "";
+
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+
+            document.getElementById('btn-start').style.opacity = '0.5';
+            document.getElementById('btn-start').style.pointerEvents = 'none';
+        }
+
+        // Add Listeners to Branch/Teacher/Name to enable button
+        // Already added in HTML onchange attributes.
+        // document.getElementById('input-teacher').addEventListener('change', checkFormCompletion); // Redundant if onchange is on HTML
+
+        function populateStudentNames() {
+            const mode = document.getElementById('input-mode').value;
+            const prog = document.getElementById('input-program').value;
+            const city = document.getElementById('input-city').value;
+            const branch = document.getElementById('input-branch').value;
+
+            const nameSelect = document.getElementById('input-name');
+            nameSelect.innerHTML = '<option value="" disabled selected>Pilih Namamu...</option>';
+
+            let studentsToDisplay = [];
+
+            if (mode === 'Online') {
+                // Use Online Students
+                if (appData && appData.onlineStudents) {
+                    studentsToDisplay = appData.onlineStudents[prog] || [];
+                }
+            } else if (mode === 'Offline') {
+                // Filter Offline Students by City & Branch
+                if (appData && appData.students && city && branch) {
+                    const allStudents = appData.students[prog] || [];
+
+                    // Normalize search terms
+                    const searchCity = city.trim().toLowerCase();
+                    const searchBranch = branch.trim().toLowerCase();
+
+                    // Filter matches (Case-insensitive)
+                    studentsToDisplay = allStudents.filter(s => {
+                        const sCity = (s.city || "").toString().trim().toLowerCase();
+                        const sBranch = (s.branch || "").toString().trim().toLowerCase();
+                        return sCity === searchCity && sBranch === searchBranch;
+                    }).map(s => s.name);
+                }
+            }
+
+            if (studentsToDisplay.length === 0) {
+                const opt = document.createElement('option');
+                opt.textContent = "(Tidak ada data siswa)";
+                nameSelect.appendChild(opt);
+            } else {
+                studentsToDisplay.sort().forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    nameSelect.appendChild(opt);
+                });
+            }
+            console.log("Student List Updated:", studentsToDisplay.length);
+            checkFormCompletion();
+        }
+
+        // REMOVED handleNameSearch, click listener, selectName 
+        // as they are no longer needed for standard dropdown
+
+        function checkFormCompletion() {
+            const name = document.getElementById('input-name').value;
+            const mode = document.getElementById('input-mode').value;
+            const prog = document.getElementById('input-program').value;
+            const city = document.getElementById('input-city').value;
+            const branch = document.getElementById('input-branch').value;
+            const teacher = document.getElementById('input-teacher').value;
+
+            let valid = false;
+
+            if (name && mode && prog && teacher) {
+                if (mode === 'Offline') {
+                    // Must have City AND Branch
+                    if (city && branch) valid = true;
+                } else {
+                    // Online: City/Branch not needed
+                    valid = true;
+                }
+            }
+
+            const btn = document.getElementById('btn-start');
+            if (valid) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+            } else {
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+            }
+        }
+
+        function startQuiz() {
+            const nameEl = document.getElementById('input-name');
+            // Gather all data
+            userData.name = nameEl.value;
+            userData.mode = document.getElementById('input-mode').value;
+            userData.program = document.getElementById('input-program').value;
+
+            const cityVal = document.getElementById('input-city').value;
+            userData.city = cityVal || "-"; // Dash if empty (Online)
+
+            userData.branch = document.getElementById('input-branch').value || '-';
+            userData.teacher = document.getElementById('input-teacher').value;
+
+            // Transition
+            const introSlide = document.getElementById('slide-intro');
+            introSlide.classList.add('exit');
+            introSlide.classList.remove('active');
+
+            setTimeout(() => {
+                const quizSlide = document.getElementById('slide-quiz');
+                quizSlide.classList.add('active');
+            }, 400);
+        }
+
+        function submitTest() {
+            // Check answers
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const q3 = document.querySelector('input[name="q3"]:checked');
+            const q4 = document.querySelector('input[name="q4"]:checked');
+            const q5 = document.querySelector('input[name="q5"]:checked');
+
+            if (!q1 || !q2 || !q3 || !q4 || !q5) {
+                showModal("Masih ada pertanyaan yang tertingal. Yuk cek lagi! 🧐");
+                return;
+            }
+
+            userData.answers = {
+                q1: q1.value,
+                q2: q2.value,
+                q3: q3.value,
+                q4: q4.value,
+                q5: q5.value
+            };
+
+            // Final message
+            showModal(`Selamat Agen ${userData.name}! \nKamu sudah siap menjelajah Nusantara di Roblox! 🎉`);
+            console.log("Submitted Data:", userData);
+        }
+
+        // --- UTILS ---
+
+        function showModal(message) {
+            document.getElementById('modal-message').innerHTML = message;
+            document.getElementById('custom-modal').classList.add('open');
+        }
+
+        function hideModal() {
+            document.getElementById('custom-modal').classList.remove('open');
+        }
+
+        function selectOption(label) {
+            const radio = label.querySelector('input[type="radio"]');
+            radio.checked = true;
+
+            // Visual update
+            const group = label.parentElement;
+            const labels = group.querySelectorAll('.option-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+        }
+    </script>
+</body>
+
+</html>
