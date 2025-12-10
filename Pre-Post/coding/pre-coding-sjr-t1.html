@@ -457,31 +457,110 @@
             transform: scale(1);
         }
 
+
+        /* Spinner Animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
+        /* SEARCHABLE DROPDOWN CSS */
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(20, 25, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-top: 5px;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 162, 255, 0.3);
+        }
+
         .modal-text {
-            color: var(--blue-main);
-            font-size: 1.3rem;
-            font-weight: 700;
+            color: #05948a;
+            font-size: 1.1rem;
+            font-weight: 500;
             margin-bottom: 2rem;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .btn-close-modal {
-            background: linear-gradient(180deg, var(--green) 0%, #388e3c 100%);
+            background: linear-gradient(180deg, #ff5e62 0%, #ff9966 100%);
             color: white;
             border: none;
-            padding: 1rem 2.5rem;
+            padding: 0.8rem 2rem;
             border-radius: 99px;
-            font-size: 1.2rem;
-            font-weight: 800;
+            font-size: 1.1rem;
+            font-weight: 700;
             font-family: "Lexend", sans-serif;
             cursor: pointer;
-            box-shadow: 0 6px 0 #2e7d32, 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 0 #c0392b, 0 8px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.15s;
         }
 
         .btn-close-modal:active {
             transform: translateY(4px);
-            box-shadow: 0 2px 0 #2e7d32;
+            box-shadow: 0 0 0 #c0392b;
+        }
+
+        /* Select Styling */
+        select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(58, 145, 153, 0.4);
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+            appearance: none;
+            /* remove default arrow */
+            /* Custom arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a29bfe%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1.2rem top 50%;
+            background-size: 0.8rem auto;
+        }
+
+        select:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.2);
+            background-color: rgba(40, 62, 66, 0.6);
+            outline: none;
         }
     </style>
 </head>
@@ -517,17 +596,53 @@
             <h2>Ayo kenalan dulu sebelum main!</h2>
 
             <div class="form-content">
-                <div class="form-group">
-                    <label>Siapa Namamu?</label>
-                    <input type="text" id="input-name" placeholder="Tulis namamu..." autocomplete="off">
+                <!-- 1. MODE (First Step) -->
+                <div class="form-group" id="group-mode">
+                    <label>Pilih Mode Belajar:</label>
+                    <select id="input-mode" onchange="handleModeChange()">
+                        <option value="" disabled selected>Pilih Mode...</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                    </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Kamu dari Kota mana?</label>
-                    <input type="text" id="input-city" placeholder="Nama kotamu..." autocomplete="off">
+                <!-- 2. PROGRAM (Second Step) - HIDDEN/AUTO -->
+                <!-- Program is auto-set to 'coding' -->
+
+                <!-- 3a. CITY (Offline Only) -->
+                <div class="form-group" id="group-city" style="display:none;">
+                    <label>Kota Asal:</label>
+                    <select id="input-city" onchange="handleCityChange()">
+                        <option value="" disabled selected>Pilih Kota / Area...</option>
+                    </select>
                 </div>
 
-                <button class="btn-primary" onclick="startQuiz()">Mulai Main! 🚀</button>
+                <!-- 3b. BRANCH (Offline Only) -->
+                <div class="form-group" id="group-branch" style="display:none;">
+                    <label>Belajar di Cabang mana</label>
+                    <select id="input-branch" onchange="handleBranchChange()">
+                        <option value="" disabled selected>Pilih Cabang...</option>
+                    </select>
+                </div>
+
+                <!-- 4. TEACHER -->
+                <div class="form-group" id="group-teacher" style="display:none;">
+                    <label>Siapa Pengajarnya?</label>
+                    <select id="input-teacher" onchange="handleTeacherChange()">
+                        <option value="" disabled selected>Pilih Guru...</option>
+                    </select>
+                </div>
+
+                <!-- 5. NAME (Final Step) -->
+                <div class="form-group" id="group-name" style="display:none;">
+                    <label>Siapa nama agen penjelajah?</label>
+                    <select id="input-name" onchange="checkFormCompletion()">
+                        <option value="" disabled selected>Pilih Namamu...</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" onclick="startQuiz()" id="btn-start"
+                    style="opacity: 0.5; pointer-events: none;">Mulai Main! 🚀</button>
             </div>
         </div>
 
@@ -600,7 +715,7 @@
                                 style="height: 80px; object-fit: contain;">
                         </label>
                         <label class="option-label" onclick="selectOption(this)">
-                            <input type="radio" name="q5" value="Slow">
+                            <input type="radio" name="q4" value="Slow">
                             <img src="https://www.scratchjr.org/images/wait.png" alt="Wait"
                                 style="height: 80px; object-fit: contain;">
                         </label>
@@ -643,49 +758,370 @@
         // Data Store
         const userData = {
             name: '',
+            mode: '',
+            program: 'coding', // Auto-set
             city: '',
+            branch: '',
+            teacher: '',
             answers: {}
         };
 
-        // UI Helpers
-        function selectOption(labelElement) {
-            // Find parent group
-            const group = labelElement.parentElement;
-            // Deselect all siblings
-            const siblings = group.querySelectorAll('.option-label');
-            siblings.forEach(el => el.classList.remove('selected'));
-            // Select clicked
-            labelElement.classList.add('selected');
-            // Check the hidden radio
-            const radio = labelElement.querySelector('input[type="radio"]');
-            if (radio) radio.checked = true;
+        // Cache for Sheet Data
+        let appData = null;
+
+        // Web App URL for data
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyLEBGpAri8cZSDHeOoJRzf7-3c8RKHH1zNP2A4Fkl54NXROhFpegTYM3mEAL02Y_Co/exec";
+
+        window.onload = function () {
+            // Fetch data from GAS Web App
+            console.log("Fetching data from GAS...");
+
+            fetch(GAS_URL)
+                .then(response => response.json())
+                .then(data => {
+                    onDataReceived(data);
+                })
+                .catch(err => {
+                    onDataFail(err);
+                });
+        };
+
+        // AUTO TRIGGER
+        // If data arrives and Program is selected -> Trigger Program Change (which reveals Mode)
+        function onDataReceived(data) {
+            console.log("Data Received:", data);
+            appData = data;
+
+            // Auto close modal if it's open
+            hideModal();
+
+            // Check if user already waiting (selected program but data wasn't there)
+            const inputMode = document.getElementById('input-mode');
+            if (inputMode.value && inputMode.value !== "") {
+                handleModeChange();
+            }
         }
 
-        function showModal(message) {
-            const modalOverlay = document.getElementById('custom-modal');
-            const modalMessage = document.getElementById('modal-message');
-            modalMessage.textContent = message;
-            modalOverlay.classList.add('open');
+        function onDataFail(err) {
+            console.error(err);
+            // Fallback for dev or error
+            // showModal("Gagal mengambil data. Coba refresh ya!");
+            console.warn("Using offline mock data due to fetch error.");
+
+            // Mock data for fallback ensuring flow works even if GAS fails permissions
+            /*
+             appData = {
+                branches: {
+                    coding: { "Jakarta": ["Kemang Mock"] },
+                    math: { "Jakarta": ["Tebet Mock"] },
+                    cloc: {}
+                },
+                teachers: {
+                    coding: [{city: "Jakarta", value: "Kak Mock"}],
+                    math: [],
+                    cloc: []
+                }
+            };
+            */
+            showModal("Koneksi ke server data terhambat. Coba refresh/muat ulang halaman ya! 😥");
         }
 
-        function hideModal() {
-            const modalOverlay = document.getElementById('custom-modal');
-            modalOverlay.classList.remove('open');
+        // --- CASCADING LOGIC ---
+
+        function handleModeChange() {
+            const mode = document.getElementById('input-mode').value;
+            userData.mode = mode;
+
+            // Reset downstream
+            resetBelowMode();
+
+            if (!appData) {
+                // If data not loaded yet, wait. onDataReceived will trigger this again.
+                showModal("Data sedang dimuat... Tunggu sebentar ya! <span class='spinner'>⏳</span>");
+                return;
+            }
+
+            if (mode === 'Online') {
+                // Online Flow: Program (coding) -> Teacher
+                populateOnlineTeachers('coding');
+            } else if (mode === 'Offline') {
+                // Offline Flow: Program (coding) -> City
+                populateCities('coding');
+            }
+        }
+
+        // Removed resetBelowMode as it was causing visibility issues.
+
+
+        // handleProgramChange removed
+
+        function populateCities(prog) {
+            const citySelect = document.getElementById('input-city');
+            citySelect.innerHTML = '<option value="" disabled selected>Pilih Kota / Area...</option>';
+
+            const cityMap = appData.branches[prog] || {};
+            const cities = Object.keys(cityMap);
+
+            if (cities.length === 0) {
+                document.getElementById('group-city').style.display = 'none';
+                return;
+            }
+
+            cities.forEach(city => {
+                const opt = document.createElement('option');
+                opt.value = city;
+                opt.textContent = city;
+                citySelect.appendChild(opt);
+            });
+
+            document.getElementById('group-city').style.display = 'block';
+
+            if (cities.length === 1) {
+                citySelect.value = cities[0];
+                handleCityChange();
+            }
+        }
+
+        function handleCityChange() {
+            // Reset downstream FIRST
+            document.getElementById('group-teacher').style.display = 'none';
+            document.getElementById('input-teacher').value = "";
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+
+            const prog = 'coding'; // Hardcoded
+            const city = document.getElementById('input-city').value;
+
+            // Offline: Populate Branch
+            const branchSelect = document.getElementById('input-branch');
+            branchSelect.innerHTML = '<option value="" disabled selected>Pilih Cabang...</option>';
+
+            const branches = appData.branches[prog][city] || [];
+
+            if (branches.length === 0) {
+                document.getElementById('group-branch').style.display = 'none';
+                return;
+            }
+
+            branches.forEach(br => {
+                const opt = document.createElement('option');
+                opt.value = br;
+                opt.textContent = br;
+                branchSelect.appendChild(opt);
+            });
+
+            document.getElementById('group-branch').style.display = 'block';
+
+            if (branches.length === 1) {
+                branchSelect.value = branches[0];
+                handleBranchChange();
+            }
+        }
+
+        function handleBranchChange() {
+            // Reset Name FIRST
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+
+            const prog = 'coding'; // Hardcoded
+            const city = document.getElementById('input-city').value;
+            const branch = document.getElementById('input-branch').value;
+
+            // Offline: Populate Teacher
+            populateTeachers(prog, city, branch);
+        }
+
+        function handleTeacherChange() {
+            // Show Name Dropdown
+            populateStudentNames();
+            document.getElementById('group-name').style.display = 'block';
+            checkFormCompletion();
+        }
+
+        function populateTeachers(prog, city, branch) {
+            // OFFLINE POPULATE
+            const teacherSelect = document.getElementById('input-teacher');
+            teacherSelect.innerHTML = '<option value="" disabled selected>Pilih Guru...</option>';
+
+            const allTeachers = appData.teachers[prog] || [];
+
+            const filteredTeachers = allTeachers.filter(t => {
+                const key = (t.city || "").toLowerCase();
+                const searchCity = (city || "").trim().toLowerCase();
+                const searchBranch = (branch || "").trim().toLowerCase();
+
+                // Filter by both City and Branch (since t.city contains "City - Branch")
+                return key.includes(searchCity) && key.includes(searchBranch);
+            });
+
+            if (filteredTeachers.length === 0) {
+                document.getElementById('group-teacher').style.display = 'none';
+                // Remove placeholder logic if hiding group
+            } else {
+                filteredTeachers.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.value;
+                    opt.textContent = t.value;
+                    teacherSelect.appendChild(opt);
+                });
+                document.getElementById('group-teacher').style.display = 'block';
+
+                if (filteredTeachers.length === 1) {
+                    teacherSelect.value = filteredTeachers[0].value;
+                    handleTeacherChange();
+                }
+            }
+        }
+
+        function populateOnlineTeachers(prog) {
+            // ONLINE POPULATE
+            const teacherSelect = document.getElementById('input-teacher');
+            teacherSelect.innerHTML = '<option value="" disabled selected>Pilih Guru...</option>';
+
+            const onlineList = appData.onlineTeachers[prog] || [];
+
+            if (onlineList.length === 0) {
+                document.getElementById('group-teacher').style.display = 'none';
+            } else {
+                onlineList.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    teacherSelect.appendChild(opt);
+                });
+                document.getElementById('group-teacher').style.display = 'block';
+
+                if (onlineList.length === 1) {
+                    teacherSelect.value = onlineList[0];
+                    handleTeacherChange();
+                }
+            }
+        }
+
+
+        // resetBelowMode removed
+
+
+        function resetBelowMode() {
+            document.getElementById('group-city').style.display = 'none';
+            document.getElementById('input-city').value = "";
+
+            document.getElementById('group-branch').style.display = 'none';
+            document.getElementById('input-branch').value = "";
+
+            document.getElementById('group-teacher').style.display = 'none';
+            document.getElementById('input-teacher').value = "";
+
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+
+            document.getElementById('btn-start').style.opacity = '0.5';
+            document.getElementById('btn-start').style.pointerEvents = 'none';
+        }
+
+        // Add Listeners to Branch/Teacher/Name to enable button
+        // Already added in HTML onchange attributes.
+        // document.getElementById('input-teacher').addEventListener('change', checkFormCompletion); // Redundant if onchange is on HTML
+
+        function populateStudentNames() {
+            const mode = document.getElementById('input-mode').value;
+            const prog = 'coding'; // Hardcoded
+            const city = document.getElementById('input-city').value;
+            const branch = document.getElementById('input-branch').value;
+
+            const nameSelect = document.getElementById('input-name');
+            nameSelect.innerHTML = '<option value="" disabled selected>Pilih Namamu...</option>';
+
+            let studentsToDisplay = [];
+
+            if (mode === 'Online') {
+                // Use Online Students
+                if (appData && appData.onlineStudents) {
+                    studentsToDisplay = appData.onlineStudents[prog] || [];
+                }
+            } else if (mode === 'Offline') {
+                // Filter Offline Students by City & Branch
+                if (appData && appData.students && city && branch) {
+                    const allStudents = appData.students[prog] || [];
+
+                    // Normalize search terms
+                    const searchCity = city.trim().toLowerCase();
+                    const searchBranch = branch.trim().toLowerCase();
+
+                    // Filter matches (Case-insensitive)
+                    studentsToDisplay = allStudents.filter(s => {
+                        const sCity = (s.city || "").toString().trim().toLowerCase();
+                        const sBranch = (s.branch || "").toString().trim().toLowerCase();
+                        return sCity === searchCity && sBranch === searchBranch;
+                    }).map(s => s.name);
+                }
+            }
+
+            if (studentsToDisplay.length === 0) {
+                document.getElementById('group-name').style.display = 'none';
+            } else {
+                studentsToDisplay.sort().forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    nameSelect.appendChild(opt);
+                });
+                document.getElementById('group-name').style.display = 'block';
+
+                if (studentsToDisplay.length === 1) {
+                    nameSelect.value = studentsToDisplay[0];
+                    checkFormCompletion();
+                }
+            }
+            console.log("Student List Updated:", studentsToDisplay.length);
+            checkFormCompletion();
+        }
+
+        // REMOVED handleNameSearch, click listener, selectName 
+        // as they are no longer needed for standard dropdown
+
+        function checkFormCompletion() {
+            const name = document.getElementById('input-name').value;
+            const mode = document.getElementById('input-mode').value;
+            const prog = 'coding'; // Hardcoded
+            const city = document.getElementById('input-city').value;
+            const branch = document.getElementById('input-branch').value;
+            const teacher = document.getElementById('input-teacher').value;
+
+            let valid = false;
+
+            if (name && mode && prog && teacher) {
+                if (mode === 'Offline') {
+                    // Must have City AND Branch
+                    if (city && branch) valid = true;
+                } else {
+                    // Online: City/Branch not needed
+                    valid = true;
+                }
+            }
+
+            const btn = document.getElementById('btn-start');
+            if (valid) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+            } else {
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+            }
         }
 
         function startQuiz() {
             const nameEl = document.getElementById('input-name');
-            const cityEl = document.getElementById('input-city');
-
-            // Quick validation
-            if (!nameEl.value.trim() || !cityEl.value.trim()) {
-                // Shake animation or simple alert
-                showModal("Isi dulu nama kamu ya! 😊");
-                return;
-            }
-
+            // Gather all data
             userData.name = nameEl.value;
-            userData.city = cityEl.value;
+            userData.mode = document.getElementById('input-mode').value;
+            userData.program = 'coding'; // Hardcoded
+
+            const cityVal = document.getElementById('input-city').value;
+            userData.city = cityVal || "-"; // Dash if empty (Online)
+
+            userData.branch = document.getElementById('input-branch').value || '-';
+            userData.teacher = document.getElementById('input-teacher').value;
 
             // Transition
             const introSlide = document.getElementById('slide-intro');
@@ -698,6 +1134,27 @@
             }, 400);
         }
 
+        // ANSWER KEY
+        const answerKey = {
+            q1: 'Up',
+            q2: 'Kalimantan',
+            q3: 'Green',
+            q4: 'Fast',
+            q5: 'Loop'
+        };
+
+        function calculateScore() {
+            let correct = 0;
+            // 5 Questions, 20 points each = 100 max
+            for (let i = 1; i <= 5; i++) {
+                const key = `q${i}`;
+                if (userData.answers[key] === answerKey[key]) {
+                    correct++;
+                }
+            }
+            return correct * 20;
+        }
+
         function submitTest() {
             // Check answers
             const q1 = document.querySelector('input[name="q1"]:checked');
@@ -706,22 +1163,95 @@
             const q4 = document.querySelector('input[name="q4"]:checked');
             const q5 = document.querySelector('input[name="q5"]:checked');
 
-            if (!q1 || !q2 || !q3 || !q4 || !q5) {
-                showModal("Masih ada pertanyaan yang tertingal. Yuk cek lagi! 🧐");
+            // Populate userData.answers from selected radio buttons
+            userData.answers = {
+                q1: q1 ? q1.value : undefined,
+                q2: q2 ? q2.value : undefined,
+                q3: q3 ? q3.value : undefined,
+                q4: q4 ? q4.value : undefined,
+                q5: q5 ? q5.value : undefined
+            };
+
+            // Validate all 5 questions
+            const missing = [];
+            for (let i = 1; i <= 5; i++) {
+                if (!userData.answers[`q${i}`]) missing.push(i);
+            }
+
+            if (missing.length > 0) {
+                showModal(`Opps! Kamu belum menjawab soal nomor: ${missing.join(', ')}`);
                 return;
             }
 
-            userData.answers = {
-                q1: q1.value,
-                q2: q2.value,
-                q3: q3.value,
-                q4: q4.value,
-                q5: q5.value,
+            // Calculate Score
+            const finalScore = calculateScore();
+            console.log("Final Score:", finalScore);
+
+            // Show sending
+            showModal("Sedang mengirim jawaban... 🚀", true);
+
+            // Prepare Payload
+            const payload = {
+                timestamp: new Date().toISOString(),
+                mode: userData.mode,
+                program: userData.program,
+                city: userData.city,
+                branch: userData.branch,
+                teacher: userData.teacher,
+                name: userData.name,
+                score: finalScore, // Send Score
+                // Extract answers from userData.answers object
+                q1: userData.answers.q1,
+                q2: userData.answers.q2,
+                q3: userData.answers.q3,
+                q4: userData.answers.q4,
+                q5: userData.answers.q5
             };
 
-            // Final message
-            showModal(`Hore! Selamat ${userData.name}! \nKamu sudah siap berpetualang! 🎉`);
-            console.log("Submitted Data:", userData);
+            fetch(GAS_URL + '?program=coding', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                showModal(`Hore! Jawabanmu sudah terkirim! 🎉<br>Skor Kamu: ${finalScore}`, false);
+                const btn = document.querySelector('button[onclick="submitTest()"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = "Terkirim!";
+                }
+            }).catch(err => {
+                console.error(err);
+                showModal("Yah, gagal mengirim. Coba lagi ya! 🥺");
+            });
+        }
+
+        // --- UTILS ---
+
+        function showModal(message, isPersistent = false) {
+            document.getElementById('modal-message').innerHTML = message;
+            document.getElementById('custom-modal').classList.add('open');
+
+            // If persistent (like sending data), hide the close button, otherwise show it
+            const closeBtn = document.querySelector('.btn-close-modal');
+            if (closeBtn) {
+                closeBtn.style.display = isPersistent ? 'none' : 'inline-block';
+            }
+        }
+
+        function hideModal() {
+            document.getElementById('custom-modal').classList.remove('open');
+        }
+
+        function selectOption(label) {
+            const radio = label.querySelector('input[type="radio"]');
+            radio.checked = true;
+
+            // Visual update
+            const group = label.parentElement;
+            const labels = group.querySelectorAll('.option-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
         }
     </script>
 </body>
