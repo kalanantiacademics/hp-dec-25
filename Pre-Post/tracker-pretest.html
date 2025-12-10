@@ -277,6 +277,24 @@
                 transform: rotate(360deg);
             }
         }
+
+        .btn-reset {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: fit-content;
+            align-self: flex-end;
+        }
+
+        .btn-reset:hover {
+            background: rgba(231, 76, 60, 0.4);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -300,6 +318,7 @@
                 <div class="form-group">
                     <label>Mode</label>
                     <select id="filter-mode" onchange="handleModeChange()">
+                        <option value="" selected>Semua Mode</option>
                         <option value="Online">Online</option>
                         <option value="Offline">Offline</option>
                     </select>
@@ -309,7 +328,8 @@
                 <div class="form-group">
                     <label>Program</label>
                     <select id="filter-program" onchange="handleProgramChange()">
-                        <option value="coding" selected>Coding</option>
+                        <option value="" selected>Semua Program</option>
+                        <option value="coding">Coding</option>
                         <option value="math">Math</option>
                         <option value="cloc">Class of Champions</option>
                     </select>
@@ -329,6 +349,13 @@
                     <select id="filter-branch" onchange="handleBranchChange()">
                         <option value="">Semua Cabang</option>
                     </select>
+                </div>
+
+                <!-- RESET BUTTON -->
+                <div class="form-group" style="justify-content: flex-end;">
+                    <button onclick="resetFilters()" class="btn-reset">
+                        🔄 Reset Filter
+                    </button>
                 </div>
 
             </div>
@@ -456,6 +483,7 @@
             document.getElementById('filter-branch').value = "";
 
             updateStudentList();
+            renderTable(); // Update Table
         }
 
         function handleProgramChange() {
@@ -464,15 +492,37 @@
                 populateCityDropdown();
             }
             updateStudentList();
+            renderTable(); // Update Table
         }
 
         function handleCityChange() {
             populateBranchDropdown();
             updateStudentList();
+            renderTable(); // Update Table
         }
 
         function handleBranchChange() {
             updateStudentList();
+            renderTable(); // Update Table
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-mode').value = "";
+            document.getElementById('filter-program').value = "";
+            document.getElementById('filter-city').value = "";
+            document.getElementById('filter-branch').value = "";
+            document.getElementById('table-search').value = "";
+
+            // Reset UI Visibility
+            document.getElementById('grp-city').style.display = 'none';
+            document.getElementById('grp-branch').style.display = 'none';
+
+            // Reset Checker Results
+            document.getElementById('search-name').value = "";
+            document.getElementById('status-result').classList.add('hidden');
+
+            updateStudentList();
+            renderTable();
         }
 
         // --- POPULATORS ---
@@ -597,6 +647,7 @@
             if (!container.contains(e.target)) {
                 document.getElementById('name-dropdown').style.display = 'none';
             }
+            // Also re-render table if clicking body (optional, but good for blur)
         });
 
         function selectStudent(studentObj) {
@@ -613,12 +664,13 @@
             resultBox.classList.remove('hidden', 'done', 'not-done');
 
             // Find specific submission
-            const program = document.getElementById('filter-program').value;
+            const fProg = (document.getElementById('filter-program').value || "").toLowerCase();
 
-            const match = submissions.find(sub =>
-                sub.name.toLowerCase().trim() === studentObj.name.toLowerCase().trim() &&
-                sub.program === program
-            );
+            const match = submissions.find(sub => {
+                const subProg = (sub.program || "").toString().toLowerCase().trim();
+                return sub.name.toLowerCase().trim() === studentObj.name.toLowerCase().trim() &&
+                    subProg === fProg;
+            });
 
             if (match) {
                 resultBox.classList.add('done');
@@ -635,7 +687,7 @@
                 resultBox.classList.add('not-done');
                 title.textContent = "❌ BELUM MENGERJAKAN";
                 title.style.color = "#e74c3c";
-                desc.textContent = "Data tidak ditemukan di sistem pre-test.";
+                desc.textContent = "Data tidak ditemukan di sistem pre-test pre-program ini.";
             }
         }
 
@@ -644,13 +696,36 @@
             const tbody = document.querySelector('#submissions-table tbody');
             const search = document.getElementById('table-search').value.toLowerCase();
 
+            // Get Filter Values from the Checker Card
+            const fMode = (document.getElementById('filter-mode').value || "").toLowerCase();
+            const fProg = (document.getElementById('filter-program').value || "").toLowerCase();
+            const fCity = document.getElementById('filter-city').value;
+            const fBranch = document.getElementById('filter-branch').value;
+
             tbody.innerHTML = '';
 
             const sorted = [...submissions].reverse(); // Newest first
 
             sorted.forEach(sub => {
+                // Normalize Data
+                const subMode = (sub.mode || "").toString().toLowerCase().trim();
+                const subProg = (sub.program || "").toString().toLowerCase().trim();
+                const subCity = (sub.city || "").toString().trim();
+                const subBranch = (sub.branch || "").toString().trim();
+
+                // 1. Text Search
                 const rowStr = JSON.stringify(sub).toLowerCase();
                 if (search && !rowStr.includes(search)) return;
+
+                // 2. Dropdown Filters
+                if (fMode && subMode !== fMode) return;
+                if (fProg && subProg !== fProg) return;
+
+                if (fMode === 'offline') {
+                    // Startswith because sometimes city in sheet has extra spaces?
+                    if (fCity && subCity !== fCity) return;
+                    if (fBranch && subBranch !== fBranch) return;
+                }
 
                 const tr = document.createElement('tr');
 
@@ -660,16 +735,32 @@
                     dateStr = new Date(sub.timestamp).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
                 } catch (e) { dateStr = sub.timestamp; }
 
+                // Format Program Name
+                let progDisplay = sub.program || "-";
+                if (subProg === 'coding') progDisplay = 'Coding';
+                if (subProg === 'math') progDisplay = 'Math';
+                if (subProg === 'cloc') progDisplay = 'Class of Champions';
+
+                // Mode Badge
+                let modeBadge = sub.mode;
+                // Capitalize first letter of mode for display
+                if (modeBadge) modeBadge = modeBadge.charAt(0).toUpperCase() + modeBadge.slice(1);
+
                 tr.innerHTML = `
                     <td>${dateStr}</td>
                     <td style="font-weight:600">${sub.name}</td>
-                    <td><span class="badge badge-mode">${sub.mode}</span></td>
-                    <td><span class="badge badge-prog">${sub.program}</span></td>
-                    <td>${sub.city} ${sub.branch ? '- ' + sub.branch : ''}</td>
+                    <td><span class="badge badge-mode">${modeBadge}</span></td>
+                    <td><span class="badge badge-prog">${progDisplay}</span></td>
+                    <td>${sub.city} ${sub.branch && sub.branch !== 'Online' ? '- ' + sub.branch : ''}</td>
                     <td><span class="badge badge-score">${sub.score}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
+
+            // If empty
+            if (tbody.children.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; opacity:0.6; padding:2rem;">Tidak ada data yang cocok dengan filter.</td></tr>';
+            }
         }
     </script>
 </body>
