@@ -613,16 +613,9 @@
                     </select>
                 </div>
 
-                <!-- 2. PROGRAM (Second Step) -->
-                <div class="form-group" id="group-program" style="display:none;">
-                    <label>Program Kamu:</label>
-                    <select id="input-program" onchange="handleProgramChange()">
-                        <option value="" disabled selected>Pilih Program...</option>
-                        <option value="coding">Coding</option>
-                        <option value="math">Math</option>
-                        <option value="cloc">CLoC</option>
-                    </select>
-                </div>
+                <!-- 2. PROGRAM (Second Step) - HIDDEN/AUTO -->
+                <!-- Program is auto-set to 'coding' -->
+
 
                 <!-- 3a. CITY (Offline Only) -->
                 <div class="form-group" id="group-city" style="display:none;">
@@ -796,7 +789,7 @@
         const userData = {
             name: '',
             mode: '',
-            program: '',
+            program: 'coding', // Auto-set
             city: '',
             branch: '',
             teacher: '',
@@ -867,46 +860,31 @@
 
         function handleModeChange() {
             const mode = document.getElementById('input-mode').value;
+            userData.mode = mode;
 
-            // Ensure Program is visible
-            document.getElementById('group-program').style.display = 'block';
+            // Reset downstream
+            resetBelowProgram();
 
-            // If we change mode, we should perhaps re-evaluate the next steps.
-            // If Program is NOT selected, we wait.
-            // If Program IS selected, we must refresh downstream (e.g. Online->Offline requires City).
+            if (!appData) {
+                // If data not loaded yet, wait. onDataReceived will trigger this again.
+                showModal("Data sedang dimuat... Tunggu sebentar ya! <span class='spinner'>⏳</span>");
+                return;
+            }
 
-            const progSelect = document.getElementById('input-program');
-            if (progSelect.value && progSelect.value !== "") {
-                handleProgramChange();
-            } else {
-                // If no program selected yet, ensure downstream is hidden
-                resetBelowProgram();
+            if (mode === 'Online') {
+                // Online Flow: Program (coding) -> Teacher
+                populateOnlineTeachers('coding');
+            } else if (mode === 'Offline') {
+                // Offline Flow: Program (coding) -> City
+                populateCities('coding');
             }
         }
 
         // Removed resetBelowMode as it was causing visibility issues.
 
 
-        function handleProgramChange() {
-            const mode = document.getElementById('input-mode').value;
-            const prog = document.getElementById('input-program').value;
+        // handleProgramChange removed as program is hardcoded
 
-            if (!appData) {
-                showModal("Data sedang dimuat... Tunggu sebentar ya! <span class='spinner'>⏳</span>");
-                return;
-            }
-
-            // Reset downstream from Program
-            resetBelowProgram();
-
-            if (mode === 'Online') {
-                // Online Flow: Program -> Teacher
-                populateOnlineTeachers(prog);
-            } else if (mode === 'Offline') {
-                // Offline Flow: Program -> City
-                populateCities(prog);
-            }
-        }
 
         function populateCities(prog) {
             const citySelect = document.getElementById('input-city');
@@ -914,6 +892,11 @@
 
             const cityMap = appData.branches[prog] || {};
             const cities = Object.keys(cityMap);
+
+            if (cities.length === 0) {
+                document.getElementById('group-city').style.display = 'none';
+                return;
+            }
 
             cities.forEach(city => {
                 const opt = document.createElement('option');
@@ -923,10 +906,22 @@
             });
 
             document.getElementById('group-city').style.display = 'block';
+
+            if (cities.length === 1) {
+                citySelect.value = cities[0];
+                handleCityChange();
+            }
         }
 
         function handleCityChange() {
-            const prog = document.getElementById('input-program').value;
+            // Reset downstream FIRST
+            document.getElementById('group-teacher').style.display = 'none';
+            document.getElementById('input-teacher').value = "";
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+
+            document.getElementById('input-name').value = "";
+            const prog = 'coding'; // Hardcoded
             const city = document.getElementById('input-city').value;
 
             // Offline: Populate Branch
@@ -934,6 +929,12 @@
             branchSelect.innerHTML = '<option value="" disabled selected>Pilih Cabang...</option>';
 
             const branches = appData.branches[prog][city] || [];
+
+            if (branches.length === 0) {
+                document.getElementById('group-branch').style.display = 'none';
+                return;
+            }
+
             branches.forEach(br => {
                 const opt = document.createElement('option');
                 opt.value = br;
@@ -943,24 +944,25 @@
 
             document.getElementById('group-branch').style.display = 'block';
 
-            // Reset downstream
-            document.getElementById('group-teacher').style.display = 'none';
-            document.getElementById('input-teacher').value = "";
-            document.getElementById('group-name').style.display = 'none';
-            document.getElementById('input-name').value = "";
+            if (branches.length === 1) {
+                branchSelect.value = branches[0];
+                handleBranchChange();
+            }
         }
 
         function handleBranchChange() {
-            const prog = document.getElementById('input-program').value;
+            // Reset Name FIRST
+            document.getElementById('group-name').style.display = 'none';
+            document.getElementById('input-name').value = "";
+
+            document.getElementById('input-name').value = "";
+
+            const prog = 'coding'; // Hardcoded
             const city = document.getElementById('input-city').value;
             const branch = document.getElementById('input-branch').value;
 
             // Offline: Populate Teacher
             populateTeachers(prog, city, branch);
-
-            // Reset Name
-            document.getElementById('group-name').style.display = 'none';
-            document.getElementById('input-name').value = "";
         }
 
         function handleTeacherChange() {
@@ -987,9 +989,8 @@
             });
 
             if (filteredTeachers.length === 0) {
-                const opt = document.createElement('option');
-                opt.textContent = "(Tidak ada guru data)";
-                teacherSelect.appendChild(opt);
+                document.getElementById('group-teacher').style.display = 'none';
+                // Remove placeholder logic if hiding group
             } else {
                 filteredTeachers.forEach(t => {
                     const opt = document.createElement('option');
@@ -997,8 +998,13 @@
                     opt.textContent = t.value;
                     teacherSelect.appendChild(opt);
                 });
+                document.getElementById('group-teacher').style.display = 'block';
+
+                if (filteredTeachers.length === 1) {
+                    teacherSelect.value = filteredTeachers[0].value;
+                    handleTeacherChange();
+                }
             }
-            document.getElementById('group-teacher').style.display = 'block';
         }
 
         function populateOnlineTeachers(prog) {
@@ -1009,9 +1015,7 @@
             const onlineList = appData.onlineTeachers[prog] || [];
 
             if (onlineList.length === 0) {
-                const opt = document.createElement('option');
-                opt.textContent = "(Tidak ada guru online)";
-                teacherSelect.appendChild(opt);
+                document.getElementById('group-teacher').style.display = 'none';
             } else {
                 onlineList.forEach(t => {
                     const opt = document.createElement('option');
@@ -1019,8 +1023,13 @@
                     opt.textContent = t;
                     teacherSelect.appendChild(opt);
                 });
+                document.getElementById('group-teacher').style.display = 'block';
+
+                if (onlineList.length === 1) {
+                    teacherSelect.value = onlineList[0];
+                    handleTeacherChange();
+                }
             }
-            document.getElementById('group-teacher').style.display = 'block';
         }
 
 
@@ -1050,7 +1059,7 @@
 
         function populateStudentNames() {
             const mode = document.getElementById('input-mode').value;
-            const prog = document.getElementById('input-program').value;
+            const prog = 'coding'; // Hardcoded
             const city = document.getElementById('input-city').value;
             const branch = document.getElementById('input-branch').value;
 
@@ -1083,9 +1092,7 @@
             }
 
             if (studentsToDisplay.length === 0) {
-                const opt = document.createElement('option');
-                opt.textContent = "(Tidak ada data siswa)";
-                nameSelect.appendChild(opt);
+                document.getElementById('group-name').style.display = 'none';
             } else {
                 studentsToDisplay.sort().forEach(name => {
                     const opt = document.createElement('option');
@@ -1093,6 +1100,12 @@
                     opt.textContent = name;
                     nameSelect.appendChild(opt);
                 });
+                document.getElementById('group-name').style.display = 'block';
+
+                if (studentsToDisplay.length === 1) {
+                    nameSelect.value = studentsToDisplay[0];
+                    checkFormCompletion();
+                }
             }
             console.log("Student List Updated:", studentsToDisplay.length);
             checkFormCompletion();
@@ -1102,9 +1115,10 @@
         // as they are no longer needed for standard dropdown
 
         function checkFormCompletion() {
+            // document.getElementById('input-name').value = ""; // FIXED: Removed this line
             const name = document.getElementById('input-name').value;
             const mode = document.getElementById('input-mode').value;
-            const prog = document.getElementById('input-program').value;
+            const prog = 'coding'; // Hardcoded
             const city = document.getElementById('input-city').value;
             const branch = document.getElementById('input-branch').value;
             const teacher = document.getElementById('input-teacher').value;
@@ -1136,7 +1150,7 @@
             // Gather all data
             userData.name = nameEl.value;
             userData.mode = document.getElementById('input-mode').value;
-            userData.program = document.getElementById('input-program').value;
+            userData.program = 'coding'; // Hardcoded
 
             const cityVal = document.getElementById('input-city').value;
             userData.city = cityVal || "-"; // Dash if empty (Online)
@@ -1153,6 +1167,27 @@
                 const quizSlide = document.getElementById('slide-quiz');
                 quizSlide.classList.add('active');
             }, 400);
+        }
+
+        // ANSWER KEY
+        const answerKey = {
+            q1: 'Gadang',
+            q2: 'Betang',
+            q3: 'Move',
+            q4: 'Toolbox',
+            q5: 'Script'
+        };
+
+        function calculateScore() {
+            let correct = 0;
+            // 5 Questions, 20 points each = 100 max
+            for (let i = 1; i <= 5; i++) {
+                const key = `q${i}`;
+                if (userData.answers[key] === answerKey[key]) {
+                    correct++;
+                }
+            }
+            return correct * 20;
         }
 
         function submitTest() {
@@ -1176,9 +1211,44 @@
                 q5: q5.value
             };
 
-            // Final message
-            showModal(`Selamat Agen ${userData.name}! \nKamu sudah siap menjelajah Nusantara di Roblox! 🎉`);
-            console.log("Submitted Data:", userData);
+            // Calculate Score
+            const finalScore = calculateScore();
+            console.log("Final Score:", finalScore);
+
+            // Show sending
+            showModal("Sedang mengirim jawaban... 🚀", true);
+
+            // Prepare Payload
+            const payload = {
+                timestamp: new Date().toISOString(),
+                mode: userData.mode,
+                program: userData.program,
+                city: userData.city,
+                branch: userData.branch,
+                teacher: userData.teacher,
+                name: userData.name,
+                score: finalScore, // Send Score
+                // Answers
+                q1: userData.answers.q1, q2: userData.answers.q2, q3: userData.answers.q3, q4: userData.answers.q4, q5: userData.answers.q5
+            };
+
+            fetch(GAS_URL + '?program=coding', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                showModal(`Hore! Jawabanmu sudah terkirim! 🎉<br>Skor Kamu: ${finalScore}`, false);
+                const btn = document.querySelector('button[onclick="submitTest()"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = "Terkirim!";
+                    btn.style.opacity = '0.7';
+                }
+            }).catch(err => {
+                console.error(err);
+                showModal("Gagal mengirim... Coba lagi ya! 🥺", false);
+            });
         }
 
         // --- UTILS ---
