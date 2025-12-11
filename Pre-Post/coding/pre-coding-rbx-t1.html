@@ -817,6 +817,8 @@
         // Web App URL for data
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyLEBGpAri8cZSDHeOoJRzf7-3c8RKHH1zNP2A4Fkl54NXROhFpegTYM3mEAL02Y_Co/exec";
 
+        const TEST_ID = "pre-coding-rbx-t1";
+
         window.onload = function () {
             // Fetch data from GAS Web App
             console.log("Fetching data from GAS...");
@@ -1290,6 +1292,7 @@
                 timestamp: new Date().toISOString(),
                 mode: userData.mode,
                 program: userData.program,
+                testId: TEST_ID,
                 city: userData.city,
                 branch: userData.branch,
                 teacher: userData.teacher,
