@@ -266,7 +266,7 @@ function saveData(data) {
     sheet = ss.insertSheet('pretest-t1');
     const headers = [
       'Timestamp', 'Mode', 'Program', 'City', 'Branch', 'Teacher', 'Name', 'Score',
-      'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10'
+      'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'TestID'
     ];
     sheet.appendRow(headers);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
@@ -297,7 +297,8 @@ function saveData(data) {
     data.q7 || '',
     data.q8 || '',
     data.q9 || '',
-    data.q10 || ''
+    data.q10 || '',
+    data.testId || ''
   ];
 
   sheet.appendRow(row);
