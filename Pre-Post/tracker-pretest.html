@@ -335,7 +335,15 @@
                     </select>
                 </div>
 
-                <!-- 3. City (Offline) -->
+                <!-- 3. Teacher (Online) -->
+                <div class="form-group" id="grp-teacher" style="display:none;">
+                    <label>Teacher</label>
+                    <select id="filter-teacher" onchange="renderTable()">
+                        <option value="">Semua Guru</option>
+                    </select>
+                </div>
+
+                <!-- 4. City (Offline) -->
                 <div class="form-group" id="grp-city" style="display:none;">
                     <label>Kota</label>
                     <select id="filter-city" onchange="handleCityChange()">
@@ -343,7 +351,7 @@
                     </select>
                 </div>
 
-                <!-- 4. Branch (Offline) -->
+                <!-- 5. Branch (Offline) -->
                 <div class="form-group" id="grp-branch" style="display:none;">
                     <label>Cabang</label>
                     <select id="filter-branch" onchange="handleBranchChange()">
@@ -391,6 +399,7 @@
                             <th>Nama</th>
                             <th>Mode</th>
                             <th>Program</th>
+                            <th>Teacher</th>
                             <th>Cabang/Kota</th>
                             <th>Score</th>
                         </tr>
@@ -459,6 +468,7 @@
         }
 
         function initUI() {
+            populateTeacherDropdown();
             handleModeChange();
             renderTable();
         }
@@ -469,15 +479,26 @@
             const mode = document.getElementById('filter-mode').value;
             const grpCity = document.getElementById('grp-city');
             const grpBranch = document.getElementById('grp-branch');
+            const grpTeacher = document.getElementById('grp-teacher');
 
             if (mode === 'Offline') {
                 grpCity.style.display = 'flex';
                 grpBranch.style.display = 'flex';
+                grpTeacher.style.display = 'none';
+                document.getElementById('filter-teacher').value = "";
                 populateCityDropdown();
+            } else if (mode === 'Online') {
+                grpCity.style.display = 'none';
+                grpBranch.style.display = 'none';
+                grpTeacher.style.display = 'flex';
+                populateTeacherDropdown();
             } else {
                 grpCity.style.display = 'none';
                 grpBranch.style.display = 'none';
+                grpTeacher.style.display = 'none';
+                document.getElementById('filter-teacher').value = "";
             }
+
             // Reset downstream
             document.getElementById('filter-city').value = "";
             document.getElementById('filter-branch').value = "";
@@ -487,12 +508,18 @@
         }
 
         function handleProgramChange() {
-            // Re-populate cities if offline
-            if (document.getElementById('filter-mode').value === 'Offline') {
-                populateCityDropdown();
+            const mode = document.getElementById('filter-mode').value;
+
+            if (mode === 'Offline') {
+                populateCityDropdown(); // Re-populate cities if offline
             }
+
+            if (mode === 'Online') {
+                populateTeacherDropdown(); // 🔥 depends on program now
+            }
+
             updateStudentList();
-            renderTable(); // Update Table
+            renderTable();
         }
 
         function handleCityChange() {
@@ -511,11 +538,13 @@
             document.getElementById('filter-program').value = "";
             document.getElementById('filter-city').value = "";
             document.getElementById('filter-branch').value = "";
+            document.getElementById('filter-teacher').value = "";
             document.getElementById('table-search').value = "";
 
             // Reset UI Visibility
             document.getElementById('grp-city').style.display = 'none';
             document.getElementById('grp-branch').style.display = 'none';
+            document.getElementById('grp-teacher').style.display = 'none';
 
             // Reset Checker Results
             document.getElementById('search-name').value = "";
@@ -708,6 +737,42 @@
             }
         }
 
+        function populateTeacherDropdown() {
+            const sel = document.getElementById('filter-teacher');
+            if (!sel) return;
+
+            const program = (document.getElementById('filter-program').value || "").toLowerCase();
+            const mode = (document.getElementById('filter-mode').value || "").toLowerCase();
+
+            sel.innerHTML = '<option value="">Semua Guru</option>';
+
+            // Only populate in ONLINE mode
+            if (mode !== "online") return;
+
+            // Filter submissions where mode = online and program matches (if selected)
+            const filtered = submissions.filter(sub => {
+                const subMode = (sub.mode || "").toLowerCase().trim();
+                const subProg = (sub.program || "").toLowerCase().trim();
+
+                if (subMode !== "online") return false;
+                if (program && subProg !== program) return false;
+
+                return true;
+            });
+
+            // Extract unique teacher list
+            const teachers = [...new Set(
+                filtered.map(s => (s.teacher || "").trim()).filter(Boolean)
+            )].sort();
+
+            teachers.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                sel.appendChild(opt);
+            });
+        }
+
         // --- TABLE RENDER ---
         function renderTable() {
             const tbody = document.querySelector('#submissions-table tbody');
@@ -719,6 +784,9 @@
             const fCity = document.getElementById('filter-city').value;
             const fBranch = document.getElementById('filter-branch').value;
 
+            const teacherSelect = document.getElementById('filter-teacher');
+            const fTeacher = (teacherSelect && teacherSelect.value || "").toLowerCase();
+
             tbody.innerHTML = '';
 
             const sorted = [...submissions].reverse(); // Newest first
@@ -729,6 +797,7 @@
                 const subProg = (sub.program || "").toString().toLowerCase().trim();
                 const subCity = (sub.city || "").toString().trim();
                 const subBranch = (sub.branch || "").toString().trim();
+                const subTeacher = (sub.teacher || "").toString().toLowerCase().trim();
 
                 // 1. Text Search
                 const rowStr = JSON.stringify(sub).toLowerCase();
@@ -737,6 +806,8 @@
                 // 2. Dropdown Filters
                 if (fMode && subMode !== fMode) return;
                 if (fProg && subProg !== fProg) return;
+
+                if (fTeacher && subTeacher !== fTeacher) return;
 
                 if (fMode === 'offline') {
                     // Startswith because sometimes city in sheet has extra spaces?
@@ -768,6 +839,7 @@
                     <td style="font-weight:600">${sub.name}</td>
                     <td><span class="badge badge-mode">${modeBadge}</span></td>
                     <td><span class="badge badge-prog">${progDisplay}</span></td>
+                    <td>${sub.teacher || '-'}</td>
                     <td>${sub.city} ${sub.branch && sub.branch !== 'Online' ? '- ' + sub.branch : ''}</td>
                     <td><span class="badge badge-score">${sub.score}</span></td>
                 `;
@@ -776,7 +848,7 @@
 
             // If empty
             if (tbody.children.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; opacity:0.6; padding:2rem;">Tidak ada data yang cocok dengan filter.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; opacity:0.6; padding:2rem;">Tidak ada data yang cocok dengan filter.</td></tr>';
             }
         }
     </script>
