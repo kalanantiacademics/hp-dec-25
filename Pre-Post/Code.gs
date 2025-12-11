@@ -298,7 +298,7 @@ function saveData(data) {
     data.q8 || '',
     data.q9 || '',
     data.q10 || '',
-    data.testId || ''
+    data.testid || ''
   ];
 
   sheet.appendRow(row);
