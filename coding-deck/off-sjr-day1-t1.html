@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Holiday Program Kids - Fun Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Fonts: Added 'Fredoka' for a fun, rounded look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      /* Updated Palette: Deep Jungle/Muted Forest Theme */
+      --blue-main: #3cb371;
+      /* Medium Sea Green (Less Neon) */
+      --blue-dark: #1b4332;
+      /* Dark Jungle Green */
+      --blue-soft: #95d5b2;
+      /* Soft Sage Green */
+      --yellow: #f4d03f;
+      /* Muted Gold */
+      --orange: #e67e22;
+      /* Carrot */
+      --purple: #9b59b6;
+      /* Amethyst */
+
+      /* Gradient: subtle dark overlay */
+      --bg-gradient: linear-gradient(180deg, #081c15 0%, #1b4332 100%);
+
+      --text-main: #e8f5e9;
+      /* Soft White/Greenish tint */
+      --text-muted: #b7e4c7;
+      /* Pale Green text */
+
+      /* Card Background: Deep Dark Teal/Green (Toned Down) */
+      --card-bg: rgba(6, 28, 20, 0.85);
+      /* Very Dark Jungle Green opacity */
+
+      --radius-xl: 30px;
+      --radius-md: 16px;
+      --shadow-soft: 0 15px 35px rgba(0, 20, 10, 0.4);
+      --shadow-hover: 0 20px 40px rgba(60, 179, 113, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Lexend", sans-serif;
+      background: url('https://images2.imgbox.com/7f/cf/WL3WUAcp_o.png') no-repeat center bottom fixed;
+      background-size: cover;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+
+    /* Typography Overrides for Fun */
+    h1,
+    h2,
+    h3,
+    .slide-title,
+    .number-label,
+    .slide-cover-heading {
+      font-family: "Fredoka", sans-serif;
+      /* Rounded font for headings */
+      letter-spacing: 0.02em;
+    }
+
+    .deck-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* --- LOGO POSITIONS (NEW) --- */
+    .bg-logos {
+      position: fixed;
+      z-index: 20;
+      /* Above background shapes, below modals if any */
+      pointer-events: none;
+      /* Let clicks pass through */
+    }
+
+    .bg-logos.left {
+      top: 20px;
+      left: 20px;
+    }
+
+    .bg-logos.right {
+      top: 20px;
+      right: 20px;
+    }
+
+    .bg-logos img {
+      height: auto;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      transition: transform 0.3s ease;
+    }
+
+    .bg-logos.left img {
+      max-width: 70px;
+      height: auto;
+    }
+
+    /* Ruangguru Logo size adjusted */
+    .bg-logos.right img {
+      max-width: 130px;
+      height: auto;
+    }
+
+    /* Holiday Program Logo size adjusted */
+
+    /* --- ANIMATED BACKGROUND ELEMENTS (The Fun Stuff) --- */
+    .floating-bg-icon {
+      position: fixed;
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.6);
+      z-index: 0;
+      pointer-events: none;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 900;
+      animation: floatUp 15s infinite linear;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Specific positions for floating icons */
+    .icon-1 {
+      top: 80%;
+      left: 10%;
+      animation-duration: 18s;
+      color: var(--blue-soft);
+      font-size: 3rem;
+    }
+
+    .icon-2 {
+      top: 90%;
+      left: 85%;
+      animation-duration: 22s;
+      color: var(--yellow);
+      font-size: 4rem;
+    }
+
+    .icon-3 {
+      top: 70%;
+      left: 50%;
+      animation-duration: 25s;
+      color: var(--red-soft);
+      font-size: 2.5rem;
+    }
+
+    .icon-4 {
+      top: 20%;
+      right: 5%;
+      animation-duration: 20s;
+      color: var(--purple);
+      opacity: 0.3;
+    }
+
+    .icon-5 {
+      top: 10%;
+      left: 5%;
+      animation-duration: 28s;
+      color: var(--orange);
+      opacity: 0.4;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+      }
+    }
+
+    /* --- TOP BAR --- */
+    .deck-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(10, 47, 24, 0.8);
+      /* Dark Forest Green */
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0, 50, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      /* Add margin to top to clear logos if on small screens, or just center it */
+      margin-top: 3rem;
+    }
+
+    .logo-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--orange), var(--yellow), var(--blue-main), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+    }
+
+    .logo-dot span {
+      width: 20px;
+      height: 20px;
+      background: #0a2f18;
+      /* Dark Green */
+      border-radius: 50%;
+    }
+
+    .deck-title-main {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+    }
+
+    .deck-title-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .kbd {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+      /* Retro key style */
+      transform: translateY(-2px);
+      font-weight: 700;
+      color: var(--blue-main);
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+    }
+
+    /* --- SLIDE FRAME & CARDS --- */
+    .slide-frame {
+      position: relative;
+      flex: 1;
+      min-height: min(650px, 75vh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      /* For 3D flip effects if needed */
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: 1200px;
+      width: 100%;
+      background: var(--card-bg);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(50px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* Bouncy transition */
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      outline: 2px dashed rgba(46, 204, 113, 0.3);
+      /* Dashed playful outline */
+      outline-offset: -12px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      z-index: 5;
+    }
+
+    /* Decorative Corner Shapes (CSS Only) */
+    .deco-blob {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    .slide::after {
+      content: "★";
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 3rem;
+      color: var(--yellow);
+      transform: rotate(15deg);
+      z-index: 0;
+      opacity: 0.8;
+      text-shadow: 0 0 10px var(--yellow);
+    }
+
+    /* Content Styling */
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .slide-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .slide-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(46, 204, 113, 0.15);
+      color: var(--blue-main);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .slide-title {
+      font-size: 2.8rem;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+    }
+
+    .slide-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      max-width: 600px;
+    }
+
+    /* --- GAMIFIED ELEMENTS --- */
+
+    /* Number Cards / Features */
+    .number-blocks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .number-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: default;
+    }
+
+    .number-card:hover {
+      transform: translateY(-10px) rotate(-2deg);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--blue-main);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .number-card:nth-child(2):hover {
+      transform: translateY(-10px) rotate(2deg);
+    }
+
+    .number-card:nth-child(3):hover {
+      transform: translateY(-10px) rotate(-1deg);
+    }
+
+    .number-label {
+      font-size: 2rem;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      background: rgba(255, 107, 107, 0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.2);
+    }
+
+    .number-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Pill Lists (Candy Style) */
+    .pill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .pill-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: 0.2s ease;
+      box-shadow: none;
+    }
+
+    .pill-item:hover {
+      transform: translateX(10px);
+      border-color: var(--blue-main);
+      box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .pill-index {
+      width: 30px;
+      height: 30px;
+      background: var(--blue-main);
+      color: #0a2f18;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 700;
+    }
+
+    /* Tag Badges */
+    .tag-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1rem;
+      border-left: 6px solid var(--orange);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .tag-card.blue {
+      border-left-color: var(--blue-main);
+    }
+
+    /* Pricing Table (Playful) */
+    .pricing-container {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    table.pricing {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.5rem;
+    }
+
+    table.pricing th {
+      text-align: left;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    table.pricing td {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    table.pricing tr td:first-child {
+      border-radius: 12px 0 0 12px;
+      font-weight: 600;
+      color: var(--blue-main);
+    }
+
+    table.pricing tr td:last-child {
+      border-radius: 0 12px 12px 0;
+      font-weight: 700;
+      color: var(--yellow);
+    }
+
+    /* Cover Slide Special */
+    .slide-cover {
+      background: linear-gradient(120deg, rgba(10, 47, 24, 0.9) 60%, rgba(46, 204, 113, 0.2) 60%);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      outline: none;
+    }
+
+    .slide-cover-inner {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      width: 100%;
+      height: 100%;
+      padding: 4rem;
+      align-items: center;
+    }
+
+    .slide-cover-heading {
+      font-size: 4rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+    }
+
+    .slide-cover-heading span {
+      color: var(--blue-main);
+      display: block;
+    }
+
+    .slide-cover-tagline {
+      display: inline-block;
+      background: var(--yellow);
+      color: #0a2f18;
+      padding: 0.5rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      transform: rotate(-2deg);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .hero-image-container {
+      position: relative;
+    }
+
+    .hero-image-container img {
+      width: 110%;
+      transform: translateX(10px) rotate(3deg);
+      border-radius: 30px;
+      border: none;
+      box-shadow: none;
+    }
+
+    /* Team Slide */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .team-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 24px;
+    }
+
+    .team-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* --- CONTROLS --- */
+    .deck-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 47, 24, 0.9);
+      padding: 0.5rem;
+      border-radius: 999px;
+      margin-top: 1rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 0.8rem 1.5rem;
+      border-radius: 99px;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-prev {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .btn-next {
+      background: var(--blue-main);
+      color: #0a192f;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 transparent;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .page-dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.3s;
+      border: none;
+    }
+
+    .page-dot.active {
+      background: var(--blue-main);
+      transform: scale(1.5);
+      box-shadow: 0 0 10px var(--blue-main);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+
+      .slide-content,
+      .slide-cover-inner,
+      .slide {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+        gap: 1.5rem;
+      }
+
+      .slide-cover {
+        background: var(--card-bg);
+      }
+
+      .slide-cover-heading {
+        font-size: 2.5rem;
+      }
+
+      .slide::after {
+        display: none;
+      }
+
+      /* Hide star on mobile */
+      .hero-image-container img {
+        width: 100%;
+        transform: none;
+        box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+      }
+
+      /* Logo adjustments for mobile */
+      .bg-logos.left img {
+        max-width: 100px;
+      }
+
+      .bg-logos.right img {
+        max-width: 80px;
+      }
+    }
+
+    /* --- UTILITY CLASSES (Refactored from Inline) --- */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .desktop-hint {
+      display: none;
+    }
+
+    @media (min-width: 600px) {
+      .desktop-hint {
+        display: block;
+      }
+    }
+
+    .slide-description {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .pill-content {
+      flex: 1;
+    }
+
+    .pill-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .target-student-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 24px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .target-title {
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .target-icon {
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .target-age {
+      color: var(--blue-main);
+      margin: 1rem 0;
+    }
+
+    .target-desc {
+      font-size: 0.9rem;
+    }
+
+    .level-badge {
+      background: var(--orange);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      transform: rotate(3deg);
+    }
+
+    .number-blocks-container {
+      margin-top: 2rem;
+    }
+
+    .number-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .slide-content-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .tag-card-container {
+      margin-bottom: 1rem;
+    }
+
+    .problem-label {
+      color: var(--orange);
+    }
+
+    .problem-text {
+      margin-top: 0.5rem;
+    }
+
+    .solution-label {
+      color: var(--blue-main);
+    }
+
+    .solution-text {
+      margin-top: 0.5rem;
+    }
+
+    .illustration-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .block-illustration {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .block-orange {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 160px;
+      height: 50px;
+      background: var(--orange);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 #ddd;
+    }
+
+    .block-blue {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      width: 160px;
+      height: 50px;
+      background: var(--blue-main);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 #ddd;
+    }
+
+    .block-yellow {
+      position: absolute;
+      top: 120px;
+      left: 0;
+      width: 160px;
+      height: 50px;
+      background: var(--yellow);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 #ddd;
+    }
+
+    .early-bird-card {
+      background: var(--yellow);
+      padding: 1.5rem;
+      border-radius: 20px;
+      color: #5d4037;
+      transform: rotate(2deg);
+    }
+
+    .early-bird-title {
+      margin-bottom: 0.5rem;
+    }
+
+    /* --- STORY MODE STYLES --- */
+    .story-title {
+      font-size: 3.5rem;
+      color: var(--yellow);
+      text-shadow: 0 4px 0 #000;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .story-text {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      background: rgba(10, 47, 24, 0.7);
+      /* Dark Green Translucent */
+      padding: 1.5rem;
+      border-radius: 20px;
+      border: 3px solid rgba(46, 204, 113, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 50, 0, 0.5);
+    }
+
+    .rpg-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--blue-main);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .instruction-split {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 2rem;
+      align-items: center;
+      height: 100%;
+    }
+
+    .instruction-text {
+      font-size: 1.3rem;
+    }
+
+    .instruction-highlight {
+      color: var(--yellow);
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .visual-placeholder {
+      background: rgba(10, 47, 24, 0.4);
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      height: 100%;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .reaction-emoji {
+      font-size: 5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .reaction-emoji:hover {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .plane-animation {
+      font-size: 10rem;
+      animation: flyRight 3s linear infinite;
+    }
+
+    @keyframes flyRight {
+      from {
+        transform: translateX(-100%) rotate(10deg);
+      }
+
+      to {
+        transform: translateX(100%) rotate(10deg);
+      }
+    }
+
+    .next-dest-card {
+      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)), url('https://images2.imgbox.com/d4/34/lHHWqr9x_o.png');
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid var(--orange);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .next-dest-content {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 3rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: slideUpFade 0.8s forwards 0.5s;
+    }
+
+    @keyframes slideUpFade {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Fixed Corner Logos -->
+  <div class="bg-logos left">
+    <img src="https://images2.imgbox.com/51/6a/xhLlGQcZ_o.png" alt="Logo Ruangguru Coding" />
+  </div>
+  <div class="bg-logos right">
+    <img src="https://images2.imgbox.com/b1/9e/5ZGPu89r_o.png" alt="Logo Holiday Program" />
+  </div>
+
+  <!-- Floating Fun Icons -->
+  <div class="floating-bg-icon icon-1">&lt;/&gt;</div>
+  <div class="floating-bg-icon icon-2">{ }</div>
+  <div class="floating-bg-icon icon-3">#</div>
+  <div class="floating-bg-icon icon-4">★</div>
+  <div class="floating-bg-icon icon-5">01</div>
+
+  <div class="deck-wrapper">
+
+    <header class="deck-topbar">
+      <div class="logo-container">
+        <img src="https://images2.imgbox.com/41/92/DsVyHQSh_o.png" alt="Logo" style="height: 50px; width: auto;" />
+        <div>
+          <div class="deck-title-main">The West Indonesia Story!</div>
+          <div class="deck-title-sub">Ruangguru Coding - Holiday Program - ScratchJr - Day 1</div>
+        </div>
+      </div>
+      <div class="desktop-hint">
+        <span class="deck-title-sub">Gunakan <span class="kbd">→</span> untuk lanjut</span>
+      </div>
+    </header>
+
+    <main class="slide-frame">
+
+      <!-- SLIDE 1: COVER -->
+      <section class="slide slide-cover active" data-slide="0">
+        <div class="slide-cover-inner">
+          <div>
+            <div class="slide-cover-tagline">Holiday Program</div>
+            <h1 class="slide-cover-heading">Petualangan <span>Coding Nusantara</span></h1>
+            <p class="slide-description">
+              Belajar logika pemrograman sambil menjelajahi cerita rakyat Indonesia. Seru, interaktif, dan penuh warna!
+            </p>
+            <button class="btn btn-next" id="startBtn">Mulai Petualangan 🚀</button>
+          </div>
+          <div class="hero-image-container">
+            <img src="https://images2.imgbox.com/77/17/8Yar2f72_o.png" alt="Anak-anak belajar coding"
+              onerror="this.src='https://placehold.co/600x400/2b7de9/fff?text=Coding+Kids'" />
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: INTRO -->
+      <section class="slide" data-slide="1">
+        <div class="slide-content" style="display: block; text-align: center;">
+          <h2 class="story-title">Halo, Ranger Cilik! 🌿</h2>
+          <div class="rpg-box story-text">
+            <p>Saya Komandan Misi! Hari ini kita akan pergi bertualang ke hutan liar di Indonesia Barat.</p>
+            <br>
+            <p>Kalian semua sekarang adalah <strong>RANGER PENJAGA HUTAN!</strong></p>
+            <br>
+            <p style="font-size: 1rem; color: #aaa;">(Siapa yang siap? Katakan "SIAP KOMANDAN!")</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2.1: COMMANDER NAME -->
+      <section class="slide" data-slide="2">
+        <div class="slide-content" style="text-align: center; display: block; position: relative;">
+          <h2 class="story-title">Kenalan dengan Komandan</h2>
+
+          <!-- Commander Image (Head to Waist) -->
+          <div
+            style="width: 200px; height: 200px; margin: 0 auto 2rem auto; border-radius: 50%; overflow: hidden; border: 5px solid var(--yellow); box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+            <img src="https://images2.imgbox.com/b7/c6/iD7gX0fK_o.png" alt="Commander Ranger"
+              style="width: 100%; height: 100%; object-fit: cover; object-position: top center;">
+          </div>
+
+          <div class="rpg-box story-text">
+            <p>Nama Komandan Misi hari ini adalah:</p>
+            <br>
+            <input type="text" id="commanderName" placeholder="Ketik Nama Kakak..."
+              style="font-size: 2rem; padding: 1rem; border-radius: 15px; border: 3px solid var(--blue-main); width: 80%; text-align: center; background: rgba(0,0,0,0.5); color: var(--yellow); font-family: 'Fredoka', sans-serif;">
+          </div>
+          <script>
+            // Inline script to handle persistence immediately when slide loads
+            (function () {
+              const input = document.getElementById('commanderName');
+              if (input) {
+                // Load from storage
+                const savedName = localStorage.getItem('hp_commander_name');
+                if (savedName) input.value = savedName;
+
+                // Save on change
+                input.addEventListener('input', (e) => {
+                  localStorage.setItem('hp_commander_name', e.target.value);
+                });
+              }
+            })();
+          </script>
+        </div>
+      </section>
+
+      <!-- SLIDE 2.2: STUDENT INTRO -->
+      <section class="slide" data-slide="3">
+        <div class="slide-content"
+          style="display: flex; flex-direction: row; align-items: center; gap: 3rem; text-align: left;">
+
+          <!-- Left: Image -->
+          <div style="flex: 1; text-align: center;">
+            <img src="https://images2.imgbox.com/18/2c/k7iOa5GK_o.png" alt="Ranger Squad"
+              style="width: 100%; max-width: 500px; height: auto; filter: drop-shadow(0 10px 20px rgba(0,20,10,0.4)); border-radius: 20px;">
+          </div>
+
+          <!-- Right: Text -->
+          <div style="flex: 1;">
+            <h2 class="story-title" style="margin-bottom: 2rem; text-align: center;">Kenalan sama Ranger! 🤝</h2>
+            <div class="rpg-box story-text">
+              <p style="margin-bottom: 1.5rem; text-align: center;">Yuk kenalan satu per satu:</p>
+              <ul style="list-style: none; font-size: 1.6rem; padding-left: 1rem; line-height: 1.8;">
+                <li style="margin-bottom: 0.8rem;">👤 <strong>Nama Panggilan</strong></li>
+                <li style="margin-bottom: 0.8rem;">🏫 <strong>Kelas Berapa?</strong></li>
+                <li style="margin-bottom: 0.8rem;">🎨 <strong>Hobi</strong></li>
+                <li>🦁 <strong>Hewan Favorit</strong></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SLIDE 3: ICE BREAKING -->
+      <section class="slide" data-slide="4">
+        <div class="slide-content" style="grid-template-columns: 1fr;">
+          <div style="text-align: center;">
+            <h2 class="slide-title">Tebak Hewan!</h2>
+            <p class="slide-subtitle">Sebelum masuk hutan, kita harus tahu hewan apa ini?</p>
+            <!-- Image Replaced -->
+            <div style="margin: 2rem 0;">
+              <img src="https://images2.imgbox.com/9f/c3/q7ZAiHjO_o.png" alt="Orangutan"
+                style="width: 550px; height: auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+            </div>
+            <p class="story-text" style="display: inline-block;">"Aku suka makan pisang, buluku oranye, dan aku tinggal
+              di Kalimantan!"</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: PRE-TEST INTRO -->
+      <section class="slide" data-slide="5">
+        <div class="slide-content" style="display: block; text-align: center;">
+          <h2 class="story-title">Cek Perlengkapan! 🎒</h2>
+          <div class="rpg-box story-text">
+            <p>Sebelum berangkat, kita harus memastikan semua Ranger sudah pintar!</p>
+            <br>
+            <p>Ayo kita kerjakan "Ujian Masuk Ranger" dulu ya!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: PRE-TEST LINK -->
+      <section class="slide" data-slide="6">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="slide-title" style="font-size: 2rem; margin-bottom: 1rem;">Ujian Masuk Ranger</h2>
+          <!-- Image Added -->
+          <div style="margin: 0 auto 1rem auto; max-width: 600px;">
+            <img src="https://images2.imgbox.com/2b/77/uhEYoDxZ_o.png" alt="Kids Ujian"
+              style="width: 100%; height: auto; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));">
+          </div>
+          <div class="rpg-box" style="padding: 1rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">Waktu: 10 Menit Maksimal</p>
+            <!-- Placeholder Link -->
+            <a href="../Pre-Post/coding/pre-coding-sjr-t1.html" target="_blank" class="btn btn-next"
+              style="font-size: 1.5rem; padding: 0.8rem 2rem;">Mulai Ujian 📝</a>
+            <p style="margin-top: 1rem; color: #fff; font-size: 0.9rem;">(Klik link di chat Zoom ya!)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: PRE-TEST DONE -->
+      <section class="slide" data-slide="7">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Selamat! 🎉</h2>
+          <div class="rpg-box story-text">
+            <p>Wah keraaaan! Sekarang kamu resmi menjadi <strong>JUNIOR RANGER!</strong></p>
+            <br>
+            <div style="font-size: 5rem;">🎖️</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: PREPARATION -->
+      <section class="slide" data-slide="8">
+        <header class="slide-header">
+          <h2 class="slide-title">Persiapan Alat</h2>
+        </header>
+        <div class="slide-content" style="grid-template-columns: 1fr 1fr;">
+          <div class="rpg-box">
+            <h3>1. Siapkan Tablet/iPad</h3>
+            <div style="font-size: 4rem;">📱</div>
+            <p>Pastikan baterai penuh!</p>
+          </div>
+          <div class="rpg-box">
+            <h3>2. Fokus ke Zoom</h3>
+            <div style="font-size: 4rem;">👀</div>
+            <p>Lihat Kakak Pengajar dulu ya.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: FLYING -->
+      <section class="slide" data-slide="9">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Ayo Terbaaang! ✈️</h2>
+          <p class="story-text">Kita naik pesawat menuju <strong>KALIMANTAN!</strong></p>
+          <div class="plane-animation">✈️</div>
+          <p style="margin-top: 2rem;">Wusssshhhhhh......</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: ARRIVAL (PROBLEM) -->
+      <section class="slide" data-slide="10">
+        <div class="slide-content slide-content-grid">
+          <div>
+            <h2 class="story-title">Sampai di Hutan!</h2>
+            <div class="rpg-box story-text" style="text-align: left;">
+              <p>Lihat! Ada teman baru di sana.</p>
+              <br>
+              <p>Tapi... kok dia diam saja ya? 😟</p>
+              <p>Dia sepertinya bosan dan ingin bermain.</p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://images2.imgbox.com/60/75/DVHhd980_o.png" alt="Monyet"
+              style="width: 460px; height: auto; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: SOLUTION -->
+      <section class="slide" data-slide="13">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Misi Kita! 💡</h2>
+          <div class="rpg-box story-text">
+            <p>Ayo kita hibur dia dengan membuat dia <strong>BERGERAK & BERMAIN!</strong></p>
+            <br>
+            <p>Kita akan menggunakan alat ajaib bernama: <strong>ScratchJr</strong></p>
+            <div style="font-size: 4rem; margin-top: 1rem;">🐱</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: INTERFACE -->
+      <section class="slide" data-slide="14">
+        <div class="slide-content instruction-split">
+          <div>
+            <h2 class="slide-title">Kenalan Dulu</h2>
+            <p class="instruction-text">Ini adalah layar kerja kita. Ada panggung (stage), ada balok perintah, dan ada
+              karakter.</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://images2.imgbox.com/f1/0e/wAqSywRv_o.png" alt="ScratchJr Interface"
+              style="width: 100%; height: auto; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: STEP 1 - ADD MONKEY -->
+      <section class="slide" data-slide="15">
+        <div class="slide-content"
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%;">
+
+          <!-- Images Area (Top, Smaller to fit) -->
+          <div
+            style="display: flex; gap: 20px; justify-content: center; align-items: center; margin-bottom: 1rem; flex-shrink: 0;">
+            <img src="https://images2.imgbox.com/7c/27/eYAW3DHF_o.png" alt="Hapus Kucing"
+              style="height: 320px; width: auto; object-fit: contain; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white;">
+            <div style="font-size: 2rem; color: var(--yellow); font-weight: bold;">&</div>
+            <img src="https://images2.imgbox.com/3a/f3/psaWI7ec_o.png" alt="Tambah Monyet"
+              style="height: 320px; width: auto; object-fit: contain; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+
+          <!-- Text Area (Bottom) -->
+          <div
+            style="background: rgba(0,0,0,0.3); padding: 1rem 2rem; border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 1;">
+            <span class="instruction-highlight"
+              style="display: block; margin-bottom: 0.5rem; font-size: 1.3rem;">Langkah 1:</span>
+            <p class="instruction-text" style="margin-bottom: 0.5rem; font-size: 1.1rem;">Kucingnya sedang tidak di
+              hutan. Ayo kita ganti!</p>
+            <ol style="display: inline-block; text-align: left; margin: 0; font-size: 1.1rem; line-height: 1.6;">
+              <li>Tekan Kucing lama-lama -> <span style="color: #ff4d4d; font-weight: bold;">(x)</span></li>
+              <li>Klik tombol <strong>(+)</strong></li>
+              <li>Pilih <strong>Monyet (Monkey)</strong></li>
+            </ol>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SLIDE 13: STEP 2 - ADD BACKGROUND -->
+      <section class="slide" data-slide="16">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Langkah 2:</span>
+            <p class="instruction-text">Monyet butuh rumah. Ayo ke hutan!</p>
+            <br>
+            <ol style="margin-left: 1.5rem; font-size: 1.2rem;">
+              <li>Klik tombol <strong>Pemandangan (Background)</strong> di atas.</li>
+              <li>Pilih hutan <strong>(Jungle)</strong>.</li>
+              <li>Centang!</li>
+            </ol>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://images2.imgbox.com/b3/f6/1Pu43yfZ_o.png" alt="Pilih Background"
+              style="max-width: 100%; max-height: 350px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 14: CONCEPT - TRIGGER -->
+      <section class="slide" data-slide="15">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Kode Ajaib: Trigger 🚦</h2>
+          <div class="rpg-box story-text">
+            <p>Supaya monyetnya siap, kita butuh aba-aba.</p>
+            <br>
+            <p>Seperti lampu lalu lintas... <strong style="color: #4cd964;">HIJAU</strong> artinya JALAN!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15: ACTION - DRAG FLAG -->
+      <section class="slide" data-slide="16">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Cari Bendera Hijau!</span>
+            <p class="instruction-text">Bisakah kamu menemukannya?</p>
+            <br>
+            <p class="instruction-text">Tarik balok <strong>Bendera Hijau</strong> ke area kerja putih di bawah.</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://images2.imgbox.com/d3/87/LYAWI1kY_o.png" alt="Drag Green Flag"
+              style="max-width: 100%; max-height: 350px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 16: TEST - CLICK FLAG (QUESTION) -->
+      <section class="slide" data-slide="17">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Coba Klik Benderanya! 👆</h2>
+          <br>
+          <div class="rpg-box story-text">
+            <p>Klik... Klik...</p>
+            <br>
+            <p>Apakah Monyetnya bergerak?</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 17: TEST - CLICK FLAG (ANSWER) -->
+      <section class="slide" data-slide="18">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Jawabannya...</h2>
+          <br>
+          <div class="rpg-box story-text">
+            <h3 style="color: var(--orange); font-size: 3rem;">BELUM! 😱</h3>
+            <br>
+            <p>(Kenapa ya?)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 18: CONCEPT - MOTION -->
+      <section class="slide" data-slide="19">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Ayo Melompat!</span>
+            <p class="instruction-text">Monyet suka melompat.</p>
+            <br>
+            <p class="instruction-text">Cari blok panah biru (Motion). Cari yang gambarnya <strong>MELOMPAT
+                (Jump)</strong>.</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdQePW3rjJeyQ0fXc_w5j1vlfovuKIJ8NBfASMxY22&s"
+              alt="Blok Jump"
+              style="max-width: 100%; max-height: 350px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 19: ACTION - COMBINE -->
+      <section class="slide" data-slide="20">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Gabungkan Puzzle!</span>
+            <p class="instruction-text">Tempelkan blok <strong>Lompat</strong> di sebelah kanan <strong>Bendera
+                Hijau</strong>.</p>
+            <br>
+            <p class="instruction-text">Harus nempel ya! "KLIK!"</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://images2.imgbox.com/b7/41/bHeiklvU_o.png" alt="Gabung Blok"
+              style="max-width: 100%; max-height: 350px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 20: SUCCESS -->
+      <section class="slide" data-slide="21">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Sekarang KLIK BENDERA! 🏁</h2>
+          <br>
+          <div class="rpg-box story-text" style="background: rgba(0,200,0,0.2); border-color: #4cd964;">
+            <div style="font-size: 4rem;">🐵 💨</div>
+            <p>HOREEE! Monyetnya melompat!</p>
+            <br>
+            <p>Kamu berhasil membuat koding pertamamu!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 21: REPEAT -->
+      <section class="slide" data-slide="22">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Ulangi Lompatan!</span>
+            <p class="instruction-text">Supaya dia tidak capek klik terus tapi bisa lompat beberapa kali...</p>
+            <br>
+            <p class="instruction-text">Gunakan blok <strong>Repeat (Ulangi)</strong> berwarna oranye.</p>
+            <p class="instruction-text" style="font-size: 1rem; color: var(--yellow); margin-top: 1rem;">(Angkanya bisa
+              diganti lho!)</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://images2.imgbox.com/6e/d5/zBLbTMOC_o.png" alt="Blok Repeat"
+              style="max-width: 100%; max-height: 350px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 22: MAJU MUNDUR -->
+      <section class="slide" data-slide="23">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Maju & Mundur</span>
+            <p class="instruction-text">Monyet juga ingin berjalan-jalan!</p>
+            <br>
+            <ul style="font-size: 1.3rem; margin-left: 1.5rem; line-height: 1.6;">
+              <li><strong>Panah Kanan:</strong> Maju (Ke Depan)</li>
+              <li><strong>Panah Kiri:</strong> Mundur (Ke Belakang)</li>
+            </ul>
+            <br>
+            <p class="instruction-text">Cobalah gabungkan dengan bendera hijau!</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://www.scratchjr.org/images/rightandleft.png" alt="Maju Mundur"
+              style="max-width: 100%; max-height: 350px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white; background: white; padding: 10px;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 23: CHALLENGE UP DOWN -->
+      <section class="slide" data-slide="24">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title" style="margin-bottom: 1rem;">CHALLENGE TIME! 🌟</h2>
+          <p class="instruction-text" style="margin-bottom: 2rem;">Bisakah kamu membuat Monyet <strong>Naik &
+              Turun</strong> dahan pohon?</p>
+
+          <div style="display: flex; justify-content: center;">
+            <div
+              style="border: 5px solid var(--orange); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+              <iframe width="600" height="340" src="https://www.youtube.com/embed/_PD6RQgrGLk"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+          <p class="instruction-text" style="margin-top: 1rem; font-size: 1rem; color: var(--yellow);">Perhatikan
+            videonya dan coba ikuti kodenya!</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 24: SHARE SCREEN -->
+      <section class="slide" data-slide="25">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Show Time! 📺</h2>
+          <div class="rpg-box story-text">
+            <p>Ayo Ranger, tunjukkan hasil karyamu!</p>
+            <br>
+            <p><strong>Share Screen</strong> satu per satu ya.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 25: EMOTION CHECK -->
+      <section class="slide" data-slide="26">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="slide-title">Gimana Perasaanmu?</h2>
+          <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 3rem;">
+            <div style="text-align: center;">
+              <div class="reaction-emoji">😢</div>
+              <p>Sedih / Bingung</p>
+            </div>
+            <div style="text-align: center;">
+              <div class="reaction-emoji">🙂</div>
+              <p>Senang</p>
+            </div>
+            <div style="text-align: center;">
+              <div class="reaction-emoji">🤩</div>
+              <p>Sangat Senang!</p>
+            </div>
+          </div>
+      </section>
+
+      <!-- SLIDE 26: CLOSING -->
+      <section class="slide" data-slide="27">
+        <div class="slide-content"
+          style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+          <h1 style="font-size: 4rem; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 2rem;">
+            Terimakasih! 👋</h1>
+
+          <p style="font-size: 2rem; color: var(--yellow); margin-bottom: 3rem;">Ketemu besok lagi ya Ranger!</p>
+
+          <div
+            style="background: rgba(255, 255, 255, 0.1); padding: 2rem; border-radius: 20px; border: 2px dashed rgba(255,255,255,0.2);">
+            <p style="font-size: 1.5rem; margin-bottom: 1rem;">Besok kita akan pergi...</p>
+            <h2 style="font-size: 3.5rem; color: var(--orange); margin: 0;">Ke SUMATRA 🐯</h2>
+            <p style="font-size: 1.2rem; margin-top: 1rem;">(Bermain dengan Gajah! 🐘)</p>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Controls -->
+    <footer class="deck-controls">
+      <button class="btn btn-prev" id="prevBtn">← Kembali</button>
+      <div class="pagination" id="pagination">
+        <!-- Dots generated by JS -->
+      </div>
+      <button class="btn btn-next" id="nextBtn">Lanjut →</button>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const startBtn = document.getElementById("startBtn");
+      const pagination = document.getElementById("pagination");
+
+      let currentIndex = 0;
+
+      function createPagination() {
+        slides.forEach((slide, index) => {
+          const dot = document.createElement("button");
+          dot.className = "page-dot";
+          dot.title = `Go to slide ${index + 1}`;
+          dot.addEventListener("click", () => goToSlide(index));
+          pagination.appendChild(dot);
+        });
+      }
+
+      function updatePagination() {
+        const dots = pagination.querySelectorAll(".page-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentIndex);
+        });
+      }
+
+      function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= slides.length) index = slides.length - 1;
+
+        // Remove active class
+        slides.forEach(s => {
+          s.classList.remove("active");
+          // Optional: Reset rotation for re-entry effect
+          s.style.transform = "translateY(50px) scale(0.95)";
+        });
+
+        currentIndex = index;
+
+        // Add active class with delay for smooth re-render
+        setTimeout(() => {
+          slides[currentIndex].classList.add("active");
+          slides[currentIndex].style.transform = "translateY(0) scale(1)";
+        }, 50);
+
+        updatePagination();
+      }
+
+      function goNext() {
+        if (currentIndex < slides.length - 1) {
+          goToSlide(currentIndex + 1);
+        }
+      }
+
+      function goPrev() {
+        if (currentIndex > 0) {
+          goToSlide(currentIndex - 1);
+        }
+      }
+
+      // Initial Setup
+      createPagination();
+      updatePagination();
+
+      // Event Listeners
+      prevBtn.addEventListener("click", goPrev);
+      nextBtn.addEventListener("click", goNext);
+      if (startBtn) startBtn.addEventListener("click", goNext);
+
+      // Keyboard Nav
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") goNext();
+        if (e.key === "ArrowLeft") goPrev();
+      });
+
+    })();
+  </script>
+</body>
+
+</html>
