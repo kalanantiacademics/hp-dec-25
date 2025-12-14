@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Holiday Program Kids - Fun Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Fonts: Added 'Fredoka' for a fun, rounded look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      /* Updated Palette: Butik Budaya (Maroon & Gold) */
+      --blue-main: #FFD700;
+      /* Gold */
+      --blue-dark: #560000;
+      /* Dark Maroon */
+      --blue-soft: #D46A6A;
+      /* Soft Red/Pink */
+      --yellow: #F0E68C;
+      /* Khaki/Light Gold */
+      --orange: #E67E22;
+      /* Carrot (Keep for accents) */
+      --purple: #8E44AD;
+      /* Deep Purple */
+
+      /* Gradient: Maroon overlay */
+      --bg-gradient: linear-gradient(180deg, #2c0000 0%, #560000 100%);
+
+      --text-main: #FFF8DC;
+      /* Cornsilk (Warm White) */
+      --text-muted: #E6B8B8;
+      /* Muted Pinkish Text */
+
+      /* Card Background: Dark Red Transparent */
+      --card-bg: rgba(60, 10, 10, 0.9);
+
+      --radius-xl: 30px;
+      --radius-md: 16px;
+      --shadow-soft: 0 15px 35px rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 20px 40px rgba(255, 215, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Lexend", sans-serif;
+      background: url('https://images2.imgbox.com/62/75/1uiKosEP_o.png') no-repeat center bottom fixed;
+      background-size: cover;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+
+    /* Typography Overrides for Fun */
+    h1,
+    h2,
+    h3,
+    .slide-title,
+    .number-label,
+    .slide-cover-heading {
+      font-family: "Fredoka", sans-serif;
+      /* Rounded font for headings */
+      letter-spacing: 0.02em;
+    }
+
+    .deck-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* --- LOGO POSITIONS (NEW) --- */
+    .bg-logos {
+      position: fixed;
+      z-index: 20;
+      /* Above background shapes, below modals if any */
+      pointer-events: none;
+      /* Let clicks pass through */
+    }
+
+    .bg-logos.left {
+      top: 20px;
+      left: 20px;
+    }
+
+    .bg-logos.right {
+      top: 20px;
+      right: 20px;
+    }
+
+    .bg-logos img {
+      height: auto;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      transition: transform 0.3s ease;
+    }
+
+    .bg-logos.left img {
+      max-width: 70px;
+      height: auto;
+    }
+
+    /* Ruangguru Logo size adjusted */
+    .bg-logos.right img {
+      max-width: 130px;
+      height: auto;
+    }
+
+    /* Holiday Program Logo size adjusted */
+
+    /* --- ANIMATED BACKGROUND ELEMENTS (The Fun Stuff) --- */
+    .floating-bg-icon {
+      position: fixed;
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.6);
+      z-index: 0;
+      pointer-events: none;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 900;
+      animation: floatUp 15s infinite linear;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Specific positions for floating icons */
+    .icon-1 {
+      top: 80%;
+      left: 10%;
+      animation-duration: 18s;
+      color: var(--blue-soft);
+      font-size: 3rem;
+    }
+
+    .icon-2 {
+      top: 90%;
+      left: 85%;
+      animation-duration: 22s;
+      color: var(--yellow);
+      font-size: 4rem;
+    }
+
+    .icon-3 {
+      top: 70%;
+      left: 50%;
+      animation-duration: 25s;
+      color: var(--red-soft);
+      font-size: 2.5rem;
+    }
+
+    .icon-4 {
+      top: 20%;
+      right: 5%;
+      animation-duration: 20s;
+      color: var(--purple);
+      opacity: 0.3;
+    }
+
+    .icon-5 {
+      top: 10%;
+      left: 5%;
+      animation-duration: 28s;
+      color: var(--orange);
+      opacity: 0.4;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+      }
+    }
+
+    /* --- TOP BAR --- */
+    .deck-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(60, 10, 10, 0.8);
+      /* Dark Maroon */
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      /* Gold Border */
+      margin-top: 3rem;
+    }
+
+    .logo-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--orange), var(--yellow), var(--blue-main), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .logo-dot span {
+      width: 20px;
+      height: 20px;
+      background: #2c0000;
+      /* Dark Maroon */
+      border-radius: 50%;
+    }
+
+    .deck-title-main {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+    }
+
+    .deck-title-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .kbd {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+      /* Retro key style */
+      transform: translateY(-2px);
+      font-weight: 700;
+      color: var(--blue-main);
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+    }
+
+    /* --- SLIDE FRAME & CARDS --- */
+    .slide-frame {
+      position: relative;
+      flex: 1;
+      min-height: min(650px, 75vh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      /* For 3D flip effects if needed */
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: 1200px;
+      width: 100%;
+      background: var(--card-bg);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(50px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* Bouncy transition */
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      outline: 2px dashed rgba(46, 204, 113, 0.3);
+      /* Dashed playful outline */
+      outline-offset: -12px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      z-index: 5;
+    }
+
+    /* Decorative Corner Shapes (CSS Only) */
+    .deco-blob {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    .slide::after {
+      content: "★";
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 3rem;
+      color: var(--yellow);
+      transform: rotate(15deg);
+      z-index: 0;
+      opacity: 0.8;
+      text-shadow: 0 0 10px var(--yellow);
+    }
+
+    /* Content Styling */
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .slide-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .slide-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-weight: 700;
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--blue-main);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .slide-title {
+      font-size: 2.8rem;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+    }
+
+    .slide-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      max-width: 600px;
+    }
+
+    /* --- GAMIFIED ELEMENTS --- */
+
+    /* Number Cards / Features */
+    .number-blocks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .number-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: default;
+    }
+
+    .number-card:hover {
+      transform: translateY(-10px) rotate(-2deg);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--blue-main);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .number-card:nth-child(2):hover {
+      transform: translateY(-10px) rotate(2deg);
+    }
+
+    .number-card:nth-child(3):hover {
+      transform: translateY(-10px) rotate(-1deg);
+    }
+
+    .number-label {
+      font-size: 2rem;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      background: rgba(255, 107, 107, 0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.2);
+    }
+
+    .number-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Pill Lists (Candy Style) */
+    .pill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .pill-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: 0.2s ease;
+      box-shadow: none;
+    }
+
+    .pill-item:hover {
+      transform: translateX(10px);
+      border-color: var(--blue-main);
+      box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .pill-index {
+      width: 30px;
+      height: 30px;
+      background: var(--blue-main);
+      color: #0a2f18;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 700;
+    }
+
+    /* Tag Badges */
+    .tag-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1rem;
+      border-left: 6px solid var(--orange);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .tag-card.blue {
+      border-left-color: var(--blue-main);
+    }
+
+    /* Pricing Table (Playful) */
+    .pricing-container {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    table.pricing {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.5rem;
+    }
+
+    table.pricing th {
+      text-align: left;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    table.pricing td {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    table.pricing tr td:first-child {
+      border-radius: 12px 0 0 12px;
+      font-weight: 600;
+      color: var(--blue-main);
+    }
+
+    table.pricing tr td:last-child {
+      border-radius: 0 12px 12px 0;
+      font-weight: 700;
+      color: var(--yellow);
+    }
+
+    /* Cover Slide Special */
+    .slide-cover {
+      background: linear-gradient(120deg, rgba(60, 10, 10, 0.9) 60%, rgba(255, 215, 0, 0.2) 60%);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      outline: none;
+    }
+
+    .slide-cover-inner {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      width: 100%;
+      height: 100%;
+      padding: 4rem;
+      align-items: center;
+    }
+
+    .slide-cover-heading {
+      font-size: 4rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+    }
+
+    .slide-cover-heading span {
+      color: var(--blue-main);
+      display: block;
+    }
+
+    .slide-cover-tagline {
+      display: inline-block;
+      background: var(--yellow);
+      color: #0a2f18;
+      padding: 0.5rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      transform: rotate(-2deg);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .hero-image-container {
+      position: relative;
+    }
+
+    .hero-image-container img {
+      width: 110%;
+      transform: translateX(10px) rotate(3deg);
+      border-radius: 30px;
+      border: none;
+      box-shadow: none;
+    }
+
+    /* Team Slide */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .team-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 24px;
+    }
+
+    .team-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .deck-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(60, 10, 10, 0.9);
+      padding: 0.5rem;
+      border-radius: 999px;
+      margin-top: 1rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 0.8rem 1.5rem;
+      border-radius: 99px;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-prev {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .btn-next {
+      background: var(--blue-main);
+      color: #0a192f;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 transparent;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .page-dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.3s;
+      border: none;
+    }
+
+    .page-dot.active {
+      background: var(--blue-main);
+      transform: scale(1.5);
+      box-shadow: 0 0 10px var(--blue-main);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+
+      .slide-content,
+      .slide-cover-inner,
+      .slide {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+        gap: 1.5rem;
+      }
+
+      .slide-cover {
+        background: var(--card-bg);
+      }
+
+      .slide-cover-heading {
+        font-size: 2.5rem;
+      }
+
+      .slide::after {
+        display: none;
+      }
+
+      /* Hide star on mobile */
+      .hero-image-container img {
+        width: 100%;
+        transform: none;
+        box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+      }
+
+      /* Logo adjustments for mobile */
+      .bg-logos.left img {
+        max-width: 100px;
+      }
+
+      .bg-logos.right img {
+        max-width: 80px;
+      }
+    }
+
+    /* --- UTILITY CLASSES (Refactored from Inline) --- */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .desktop-hint {
+      display: none;
+    }
+
+    @media (min-width: 600px) {
+      .desktop-hint {
+        display: block;
+      }
+    }
+
+    .slide-description {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .pill-content {
+      flex: 1;
+    }
+
+    .pill-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .target-student-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 24px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .target-title {
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    .target-icon {
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .target-age {
+      color: var(--blue-main);
+      margin: 1rem 0;
+    }
+
+    .target-desc {
+      font-size: 0.9rem;
+    }
+
+    .level-badge {
+      background: var(--orange);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      transform: rotate(3deg);
+    }
+
+    .number-blocks-container {
+      margin-top: 2rem;
+    }
+
+    .number-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .slide-content-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .tag-card-container {
+      margin-bottom: 1rem;
+    }
+
+    .problem-label {
+      color: var(--orange);
+    }
+
+    .problem-text {
+      margin-top: 0.5rem;
+    }
+
+    .solution-label {
+      color: var(--blue-main);
+    }
+
+    .solution-text {
+      margin-top: 0.5rem;
+    }
+
+    .illustration-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .block-illustration {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .block-orange {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 160px;
+      height: 50px;
+      background: var(--orange);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 #ddd;
+    }
+
+    .block-blue {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      width: 160px;
+      height: 50px;
+      background: var(--blue-main);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 #ddd;
+    }
+
+    .block-yellow {
+      position: absolute;
+      top: 120px;
+      left: 0;
+      width: 160px;
+      height: 50px;
+      background: var(--yellow);
+      border-radius: 8px;
+      box-shadow: 4px 4px 0 #ddd;
+    }
+
+    .early-bird-card {
+      background: var(--yellow);
+      padding: 1.5rem;
+      border-radius: 20px;
+      color: #5d4037;
+      transform: rotate(2deg);
+    }
+
+    .early-bird-title {
+      margin-bottom: 0.5rem;
+    }
+
+    /* --- STORY MODE STYLES --- */
+    .story-title {
+      font-size: 3.5rem;
+      color: var(--yellow);
+      text-shadow: 0 4px 0 #000;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .story-text {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      background: rgba(60, 10, 10, 0.7);
+      /* Dark Maroon Translucent */
+      padding: 1.5rem;
+      border-radius: 20px;
+      border: 3px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .rpg-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--blue-main);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .instruction-split {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 2rem;
+      align-items: center;
+      height: 100%;
+    }
+
+    .instruction-text {
+      font-size: 1.3rem;
+    }
+
+    .instruction-highlight {
+      color: var(--yellow);
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .visual-placeholder {
+      background: rgba(10, 47, 24, 0.4);
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      height: 100%;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .reaction-emoji {
+      font-size: 5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .reaction-emoji:hover {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .plane-animation {
+      font-size: 10rem;
+      animation: flyRight 3s linear infinite;
+    }
+
+    @keyframes flyRight {
+      from {
+        transform: translateX(-100%) rotate(10deg);
+      }
+
+      to {
+        transform: translateX(100%) rotate(10deg);
+      }
+    }
+
+    .next-dest-card {
+      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)), url('https://images2.imgbox.com/d4/34/lHHWqr9x_o.png');
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid var(--orange);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .next-dest-content {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 3rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: slideUpFade 0.8s forwards 0.5s;
+    }
+
+    @keyframes slideUpFade {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Fixed Corner Logos -->
+  <div class="bg-logos left">
+    <img src="https://images2.imgbox.com/51/6a/xhLlGQcZ_o.png" alt="Logo Ruangguru Coding" />
+  </div>
+  <div class="bg-logos right">
+    <img src="https://images2.imgbox.com/b1/9e/5ZGPu89r_o.png" alt="Logo Holiday Program" />
+  </div>
+
+  <!-- Floating Fun Icons -->
+  <div class="floating-bg-icon icon-1">&lt;/&gt;</div>
+  <div class="floating-bg-icon icon-2">{ }</div>
+  <div class="floating-bg-icon icon-3">#</div>
+  <div class="floating-bg-icon icon-4">★</div>
+  <div class="floating-bg-icon icon-5">01</div>
+
+  <div class="deck-wrapper">
+
+    <header class="deck-topbar">
+      <div class="logo-container">
+        <img src="https://images2.imgbox.com/41/92/DsVyHQSh_o.png" alt="Logo" style="height: 50px; width: auto;" />
+        <div>
+          <div class="deck-title-main">West Indonesia Wardrobe!</div>
+          <div class="deck-title-sub">Ruangguru Coding - Holiday Program - Scratch - Day 1</div>
+        </div>
+      </div>
+      <div class="desktop-hint">
+        <span class="deck-title-sub">Gunakan <span class="kbd">→</span> untuk lanjut</span>
+      </div>
+    </header>
+
+    <main class="slide-frame">
+
+      <!-- SLIDE 1: COVER -->
+      <section class="slide slide-cover active" data-slide="0">
+        <div class="slide-cover-inner">
+          <div>
+            <div class="slide-cover-tagline">Holiday Program</div>
+            <h1 class="slide-cover-heading">Butik Budaya <span>Nusantara</span></h1>
+            <p class="slide-description">
+              Petualangan menjadi <strong>Desainer Digital</strong>! Ayo bantu model kita tampil keren dengan busana
+              adat Indonesia menggunakan <strong>CODING!</strong>
+            </p>
+            <button class="btn btn-next" id="startBtn">Masuk Butik 👗</button>
+          </div>
+          <div class="hero-image-container">
+            <img src="https://images2.imgbox.com/77/17/8Yar2f72_o.png" alt="Anak-anak belajar coding"
+              onerror="this.src='https://placehold.co/600x400/560000/fff?text=Butik+Digital'" />
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: INTRO -->
+      <section class="slide" data-slide="1">
+        <div class="slide-content" style="display: block; text-align: center;">
+
+          <div style="margin: 0 auto 1.5rem auto; max-width: 800px;">
+            <img src="https://images2.imgbox.com/dd/4a/tJdXruok_o.png" alt="Butik Chaos"
+              style="width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid var(--orange);">
+          </div>
+
+          <div class="rpg-box story-text" style="font-size: 1.3rem; padding: 1rem; max-width: 900px;">
+            <p><strong>GAWAT!</strong> Besok ada Fashion Show besar... Tapi para model <strong>belum siap ganti
+                baju!</strong> 😭</p>
+            <p style="margin-top: 0.5rem;">Mereka butuh bantuanmu untuk membuat <strong>ALAT GANTI BAJU
+                OTOMATIS!</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: ROLE -->
+      <section class="slide" data-slide="2">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title" style="margin-bottom: 0.5rem;">Peran Kamu 👩‍💻</h2>
+
+          <div style="margin: 0 auto 1rem auto; max-width: 500px;">
+            <img src="https://images2.imgbox.com/12/3b/scvqdLTz_o.png" alt="Desainer Digital"
+              style="width: 100%; height: auto; filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));">
+          </div>
+
+          <div class="rpg-box story-text" style="padding: 1rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">Mulai sekarang, kalian semua adalah:</p>
+            <h1
+              style="color: var(--blue-main); font-size: 3rem; text-shadow: 0 0 10px var(--orange); margin: 0; line-height: 1.2;">
+              DESAINER DIGITAL
+            </h1>
+            <p style="font-size: 1.2rem; margin-top: 0.5rem;">Tugas: Menggunakan Kode untuk mengatur Fashion Show!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: COMMANDER NAME -->
+      <section class="slide" data-slide="3">
+        <div class="slide-content" style="text-align: center; display: block; position: relative;">
+          <h2 class="story-title">Kepala Desainer</h2>
+
+          <!-- Commander Image -->
+          <div
+            style="width: 200px; height: 200px; margin: 0 auto 2rem auto; border-radius: 50%; overflow: hidden; border: 5px solid var(--blue-main); box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+            <img src="https://images2.imgbox.com/4b/0b/DMWUdruE_o.png" alt="Kepala Desainer Butik"
+              style="width: 100%; height: 100%; object-fit: cover; object-position: top center;">
+          </div>
+
+          <div class="rpg-box story-text">
+            <p>Perkenalkan, Kepala Desainer Butik:</p>
+            <br>
+            <input type="text" id="commanderName" placeholder="Ketik Nama Kakak..."
+              style="font-size: 2rem; padding: 1rem; border-radius: 15px; border: 3px solid var(--blue-main); width: 80%; text-align: center; background: rgba(0,0,0,0.5); color: var(--yellow); font-family: 'Fredoka', sans-serif;">
+          </div>
+          <script>
+            // Inline script to handle persistence immediately when slide loads
+            (function () {
+              const input = document.getElementById('commanderName');
+              if (input) {
+                // Load from storage
+                const savedName = localStorage.getItem('hp_commander_name');
+                if (savedName) input.value = savedName;
+
+                // Save on change
+                input.addEventListener('input', (e) => {
+                  localStorage.setItem('hp_commander_name', e.target.value);
+                });
+              }
+            })();
+          </script>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: TEAM INTRO -->
+      <section class="slide" data-slide="4">
+        <div class="slide-content"
+          style="display: flex; flex-direction: row; align-items: center; gap: 3rem; text-align: left;">
+          <!-- Left: Image -->
+          <div style="flex: 1; text-align: center;">
+            <img src="https://images2.imgbox.com/f8/57/sFn33IcK_o.png" alt="Designer Team"
+              style="width: 100%; max-width: 500px; height: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4)); border-radius: 20px;">
+          </div>
+          <!-- Right: Text -->
+          <div style="flex: 1;">
+            <h2 class="story-title" style="margin-bottom: 2rem; text-align: center;">Tim Desainer 🤝</h2>
+            <div class="rpg-box story-text">
+              <p style="margin-bottom: 1.5rem; text-align: center;">Absen dulu yuk, Calon Desainer:</p>
+              <ul style="list-style: none; font-size: 1.6rem; padding-left: 1rem; line-height: 1.8;">
+                <li style="margin-bottom: 0.8rem;">👤 <strong>Nama Panggilan</strong></li>
+                <li style="margin-bottom: 0.8rem;">🏫 <strong>Asal Sekolah</strong></li>
+                <li style="margin-bottom: 0.8rem;">🎨 <strong>Warna Favorit?</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: PRE-TEST INTRO -->
+      <section class="slide" data-slide="5">
+        <div class="slide-content" style="display: block; text-align: center;">
+          <h2 class="story-title">Ujian Kesiapan! 📝</h2>
+          <div class="rpg-box story-text">
+            <p>Sebelum memegang alat desain canggih...</p>
+            <br>
+            <p>Kita harus lulus <strong>Ujian Logika Desainer</strong> dulu!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: PRE-TEST LINK -->
+      <section class="slide" data-slide="6">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="slide-title" style="font-size: 2rem; margin-bottom: 1rem;">Ujian Masuk</h2>
+          <div style="margin: 0 auto 1rem auto; max-width: 600px;">
+            <img src="https://images2.imgbox.com/2b/3a/RjzkL0BQ_o.png" alt="Kids Ujian"
+              style="width: 100%; height: auto; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));">
+          </div>
+          <div class="rpg-box" style="padding: 1rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">Waktu: 10 Menit</p>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);">
+              <p style="color: #ddd; font-size: 1rem; margin-bottom: 0.5rem;">Untuk Siswa Offline, ketik link ini:</p>
+              <h3
+                style="color: var(--yellow); font-size: 2.2rem; margin: 0; letter-spacing: 2px; text-shadow: 2px 2px 0 #000; background: rgba(0,0,0,0.5); padding: 0.5rem; border-radius: 10px; display: inline-block;">
+                bit.ly/pre-scratch-t1</h3>
+            </div>
+
+            <p style="margin-top: 1rem; color: #aaa; font-size: 0.9rem;">(Untuk Online, Link juga ada di chat Zoom)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: PROJECT SHOWCASE -->
+      <section class="slide" data-slide="7">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Misi Minggu Ini 🎯</h2>
+          <div class="rpg-box story-text" style="display: flex; justify-content: center; padding: 1rem;">
+            <iframe src="https://scratch.mit.edu/projects/1238190942/embed" allowtransparency="true" width="485"
+              height="402" frameborder="0" scrolling="no" allowfullscreen></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: STUDIO INTRO (INTERFACE) -->
+      <section class="slide" data-slide="8">
+        <div class="slide-content instruction-split">
+          <div>
+            <h2 class="slide-title">Studio Desain (Scratch)</h2>
+            <p class="instruction-text">Selamat datang di ruang kerja kita!</p>
+            <ul style="font-size: 1.2rem; margin-left: 1.5rem; margin-top: 1rem; line-height: 1.5;">
+              <li><strong>Stage:</strong> Panggung Catwalk / Butik.</li>
+              <li><strong>Sprite:</strong> Model (Orang).</li>
+              <li><strong>Blocks:</strong> Perintah untuk Model.</li>
+            </ul>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px;">
+            <img src="https://robotical.io/wp-content/uploads/2021/03/scratch-interface.png" alt="Scratch Interface"
+              style="width: 100%; height: auto; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 2px solid white;">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: FASHION RESOURCES -->
+      <section class="slide" data-slide="9"
+        style="display: flex; flex-direction: column; padding: 2rem; align-items: center; justify-content: center;">
+        <div style="text-align: center;">
+          <h2 class="story-title" style="font-size: 2.5rem;">Desain Busana 👗</h2>
+          <div class="rpg-box story-text" style="padding: 1.5rem; font-size: 1.2rem;">
+            <p>Desain busananya sudah tersedia! Ayo kita ambil.</p>
+            <br>
+            <p>Coba kalian masukkan link ini ke browser:</p>
+            <h1
+              style="margin-top: 1rem; background: var(--blue-dark); padding: 1rem; border-radius: 15px; border: 2px dashed var(--yellow);">
+              <a href="https://bit.ly/hp25-scratch-t1" target="_blank"
+                style="color: var(--yellow); text-decoration: none;">bit.ly/hp25-scratch-t1</a>
+            </h1>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: REMIX -->
+      <section class="slide" data-slide="10"
+        style="display: flex; flex-direction: column; padding: 1.5rem; gap: 0.5rem; align-items: center; justify-content: start;">
+        <div style="flex: 0 0 auto; width: 100%; text-align: center;">
+          <h2 class="story-title" style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Remix Project 🔄</h2>
+          <div class="rpg-box story-text" style="padding: 0.5rem 1rem; font-size: 1rem; display: inline-block;">
+            <p>Kalau sudah dapat linknya, kamu bisa klik tombol <strong>Remix</strong> ya!</p>
+          </div>
+        </div>
+        <div
+          style="flex: 1; width: 100%; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+          <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/523154fc-424a-4c14-915f-d869b4e9bc5e.png"
+            alt="Remix Button"
+            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+        </div>
+      </section>
+
+      <!-- SLIDE 11: SPRITE & COSTUME INFO -->
+      <section class="slide" data-slide="11"
+        style="display: flex; flex-direction: column; padding: 1.5rem; gap: 0.5rem; align-items: center; justify-content: start;">
+        <div style="flex: 0 0 auto; width: 100%; text-align: center;">
+          <h2 class="story-title" style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Cek Sprite & Kostum</h2>
+          <div class="rpg-box story-text" style="padding: 0.5rem 1rem; font-size: 1rem; display: inline-block;">
+            <p>Coba klik Spritenya, kemudian ke tab <strong>Costumes</strong> untuk melihat baju yang tersedia.</p>
+          </div>
+        </div>
+        <div
+          style="flex: 1; width: 100%; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+          <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/5c5956bf-13a3-42c7-8a3b-168ef98f5459.png"
+            alt="Costume Tab"
+            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+        </div>
+      </section>
+
+      <!-- SLIDE 12: GOOGLE IMAGE SEARCH -->
+      <section class="slide" data-slide="12"
+        style="display: flex; flex-direction: column; padding: 1.5rem; gap: 0.5rem; align-items: center; justify-content: start;">
+        <div style="flex: 0 0 auto; width: 100%; text-align: center;">
+          <h2 class="story-title" style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Cari Gambar Sendiri 🔎</h2>
+          <div class="rpg-box story-text" style="padding: 0.5rem 1rem; font-size: 1rem; display: inline-block;">
+            <p>Kalau kamu mau cari gambar baju sendiri, kamu bisa gunakan <strong>Google Images</strong>.</p>
+          </div>
+        </div>
+        <div
+          style="flex: 1; width: 100%; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+          <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/39855fde-e3ab-4276-a466-1a65dfd6b344.png"
+            alt="Google Search"
+            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+        </div>
+      </section>
+
+      <!-- SLIDE 13: TRANSPARENT INTRO -->
+      <section class="slide" data-slide="13"
+        style="display: flex; flex-direction: column; padding: 1.5rem; gap: 0.5rem; align-items: center; justify-content: start;">
+        <div style="flex: 0 0 auto; width: 100%; text-align: center;">
+          <h2 class="story-title" style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Tips: Hapus Background ✨</h2>
+          <div class="rpg-box story-text" style="padding: 0.5rem 1rem; font-size: 1rem; display: inline-block;">
+            <p>Supaya gambar tidak ada kotak putihnya, cari tools <strong>Color</strong> -> pilih yang
+              <strong>Transparent</strong> (Garis Merah).
+            </p>
+          </div>
+        </div>
+        <div
+          style="flex: 1; width: 100%; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+          <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/fec6020c-ca9a-464f-b718-4bf72b7b75c4.png"
+            alt="Transparent Tool"
+            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+        </div>
+      </section>
+
+      <!-- SLIDE 14: TRANSPARENT RESULT -->
+      <section class="slide" data-slide="14"
+        style="display: flex; flex-direction: column; padding: 1.5rem; gap: 0.5rem; align-items: center; justify-content: start;">
+        <div style="flex: 0 0 auto; width: 100%; text-align: center;">
+          <h2 class="story-title" style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Hasilnya Rapi! 👌</h2>
+          <div class="rpg-box story-text" style="padding: 0.5rem 1rem; font-size: 1rem; display: inline-block;">
+            <p>Jadi nanti dia akan menampilkan gambar yang <strong>tidak ada background-nya</strong>. Keren kan?</p>
+          </div>
+        </div>
+        <div
+          style="flex: 1; width: 100%; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+          <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/b1319414-81c8-42d5-9d43-074b4072d8d6.png"
+            alt="Transparent Result"
+            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+        </div>
+      </section>
+
+      <!-- SLIDE 15: UPLOAD ASSET -->
+      <section class="slide" data-slide="15"
+        style="display: flex; flex-direction: column; padding: 1.5rem; gap: 0.5rem; align-items: center; justify-content: start;">
+        <div style="flex: 0 0 auto; width: 100%; text-align: center;">
+          <h2 class="story-title" style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Upload Gambar �</h2>
+          <div class="rpg-box story-text" style="padding: 0.5rem 1rem; font-size: 1rem; display: inline-block;">
+            <p>Kalau kamu mau upload gambar yang sudah dipilih, klik tombol <strong>Upload</strong> di logo kucing ya!
+            </p>
+          </div>
+        </div>
+        <div
+          style="flex: 1; width: 100%; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;">
+          <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/cee20d35-3396-4019-be2f-c68e3b39833e.png"
+            alt="Upload Button"
+            style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));">
+        </div>
+      </section>
+
+      <!-- SLIDE 16: CONCEPT - TRIGGER -->
+      <section class="slide" data-slide="16">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Konsep: Trigger (Pemicu) ⚡</h2>
+          <div class="slide-content-grid" style="margin-top: 2rem; text-align: left;">
+            <div class="rpg-box">
+              <h3>Di Dunia Nyata</h3>
+              <p>Saat kamu tekan <strong>Saklar Lampu</strong>...</p>
+              <p>Maka lampu <strong>Menyala</strong>.</p>
+              <br>
+              <div style="font-size: 3rem;">👆 💡</div>
+            </div>
+            <div class="rpg-box">
+              <h3>Di Coding</h3>
+              <p>Saat kita tekan <strong>Tombol Keyboard</strong>...</p>
+              <p>Maka Model <strong>Berubah</strong>.</p>
+              <br>
+              <div class="illustration-container">
+                <img src="https://scratch.oneoffcoder.com/_images/01-when-space-clicked.png"
+                  alt="When Space Key Pressed" style="display: block; width: 100%; max-width: 250px; height: auto;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 17: CODING 1 - SKIN TONE (MALE) -->
+      <section class="slide" data-slide="17">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Misi 1: Warna Kulit</span>
+            <p class="instruction-text">Laki-laki punya kostum / warna kulit yang banyak.</p>
+            <p class="instruction-text">Kita mau mengganti-ganti supaya bisa menyesuaikan warna kulit yang sesuai!</p>
+            <br>
+            <div class="rpg-box" style="text-align: left; padding: 1rem;">
+              <p>Caranya: Tambahkan <strong>Blok Kode</strong> untuk mengubah setiap kali kita klik angka
+                <strong>1</strong> (atau tombol apapun) di keyboard.
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/fdf81228-fa50-4829-ad2a-19e84b96ec16.png"
+              alt="Code Example"
+              style="width: 100%; max-width: 500px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 18: CODING 2 - SKIN TONE (FEMALE) -->
+      <section class="slide" data-slide="18">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Misi 2: Tantangan Pria & Wanita</span>
+            <p class="instruction-text">Tadi kita sudah ubah warna kulit Pria pakai tombol [1].</p>
+            <br>
+            <div class="rpg-box" style="text-align: left; padding: 1.5rem;">
+              <p style="font-weight: bold; color: var(--yellow);">TANTANGAN:</p>
+              <p>Sekarang pilih <strong>Model Wanita</strong>.</p>
+              <p>Buat kode yang sama, tapi gunakan tombol <strong>[2]</strong>!</p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/419d9af3-7623-47e8-8e3c-d8efd41c99fb.png" alt="Female Costume" 
+                 style="width: 100%; max-width: 400px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 19: COSTUME INTRO -->
+      <section class="slide" data-slide="19">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Misi 3: Ganti Kostum 👕</span>
+            <p class="instruction-text">Kan kita sudah kasih kode buat warna kulit, sekarang kita mulai ke kostumnya yuk!</p>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/e686d513-f569-4a63-bf5e-eedbad60ebb3.png" alt="Costume Intro" 
+                 style="width: 100%; max-width: 500px; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 20: CODING MALE COSTUME -->
+      <section class="slide" data-slide="20">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Kostum Pria (Huruf L)</span>
+            <p class="instruction-text">Untuk mengubah kostum pria, kita harus menggunakan trigger yang sama namun coba ubah jadi huruf <strong>L</strong>.</p>
+            <br>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                 <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/4c55124b-c054-41ba-b64d-eee704b57b23.png" alt="Male Code 1" style="width: 45%; border-radius: 10px;">
+                 <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/18132dd2-e6f8-46b4-bea6-c9549373927f.png" alt="Male Code 2" style="width: 45%; border-radius: 10px;">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <div style="font-size: 5rem;">👨 ➡️ 👕</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 21: CODING FEMALE COSTUME -->
+      <section class="slide" data-slide="21">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Kostum Wanita (Huruf P)</span>
+            <p class="instruction-text">Untuk kostum perempuan, kita bisa gunakan huruf <strong>P</strong> atau apapun yang kalian mau.</p>
+            <br>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                 <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/646ac7be-2b7b-40c9-a62d-27ab1f34eb28.png" alt="Female Code 1" style="width: 45%; border-radius: 10px;">
+                 <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/978546a1-1012-43d4-992e-fee88073c0bc.png" alt="Female Code 2" style="width: 45%; border-radius: 10px;">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <div style="font-size: 5rem;">👩 ➡️ 👗</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 22: CONCEPT - SPECIFIC VS NEXT -->
+      <section class="slide" data-slide="22">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Konsep: Pilih vs Acak 🎲</h2>
+          <div class="slide-content-grid" style="margin-top: 2rem; text-align: left;">
+            <div class="rpg-box">
+              <h3>Next Costume</h3>
+              <p>Seperti mengambil baju dari tumpukan <strong>urutan</strong>.</p>
+              <p>Berubah terus: A -> B -> C -> A</p>
+            </div>
+            <div class="rpg-box">
+              <h3>Switch Costume To</h3>
+              <p>Seperti mengambil <strong>Baju Khusus</strong> dari lemari.</p>
+              <p>"Saya mau baju MERAH!" (Langsung dapat Merah)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 23: CODING 3 - OUTFIT (SPECIFIC) -->
+      <section class="slide" data-slide="23">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Misi 3: Ganti Baju Adat</span>
+            <p class="instruction-text">Kita mau model langsung pakai Baju Adat A saat tombol A ditekan.</p>
+            <br>
+            <ol style="font-size: 1.2rem; margin-left: 1.5rem; line-height: 1.6;">
+              <li>Pilih Sprite <strong>Model Pria</strong>.</li>
+              <li>Ambil <span style="color: var(--yellow); font-weight: bold;">When [Space] Key Pressed</span> ->
+                ubah jadi <strong>[a]</strong>.</li>
+              <li>Ambil <span style="color: var(--purple); font-weight: bold;">Switch Costume To [ ... ]</span>.
+              </li>
+              <li>Pilih kostum <strong>"Baju Adat A"</strong>.</li>
+            </ol>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <div
+              style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 20px; border: 2px dashed rgba(255,255,255,0.3);">
+              <div
+                style="background: #FFBF00; padding: 10px; border-radius: 5px; margin-bottom: 5px; color: black; font-weight: bold;">
+                When [a] key pressed</div>
+              <div style="background: #9966FF; padding: 10px; border-radius: 5px; color: white; font-weight: bold;">
+                Switch costume to [Baju Adat A]</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- SLIDE 25: SHOWCASE -->
+      <section class="slide" data-slide="25">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">FASHION SHOW TIME! 📸</h2>
+          <div class="rpg-box story-text">
+            <p>Ayo Desainer, tunjukkan hasil karyamu!</p>
+            <br>
+            <p>Share Screen dan tekan tombol <strong>1, 2, A, B, Q</strong> untuk demo!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 26: EMOTION CHECK -->
+      <section class="slide" data-slide="26">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="slide-title">Gimana Perasaanmu?</h2>
+          <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 3rem;">
+            <div style="text-align: center;">
+              <div class="reaction-emoji">😢</div>
+              <p>Bingung</p>
+            </div>
+            <div style="text-align: center;">
+              <div class="reaction-emoji">🙂</div>
+              <p>Senang</p>
+            </div>
+            <div style="text-align: center;">
+              <div class="reaction-emoji">🤩</div>
+              <p>Bangga!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 27: CLOSING -->
+      <section class="slide" data-slide="27">
+        <div class="slide-content"
+          style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h1 style="font-size: 4rem; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-bottom: 2rem;">
+            Misi Selesai! 🎬</h1>
+          <p style="font-size: 2rem; color: var(--yellow); margin-bottom: 3rem;">Terima kasih Desainer Hebat!</p>
+          <div
+            style="background: rgba(255, 255, 255, 0.1); padding: 2rem; border-radius: 20px; border: 2px dashed rgba(255,255,255,0.2);">
+            <p style="font-size: 1.5rem; margin-bottom: 1rem;">Besok kita lanjut...</p>
+            <h2 style="font-size: 3.5rem; color: var(--orange); margin: 0;">Game Logic 🎉</h2>
+            <p style="font-size: 1.2rem; margin-top: 1rem;">Rumah Adat dan Background</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Controls -->
+    <footer class="deck-controls">
+      <button class="btn btn-prev" id="prevBtn">← Kembali</button>
+      <div class="pagination" id="pagination">
+        <!-- Dots generated by JS -->
+      </div>
+      <button class="btn btn-next" id="nextBtn">Lanjut →</button>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const startBtn = document.getElementById("startBtn");
+      const pagination = document.getElementById("pagination");
+
+      let currentIndex = 0;
+
+      function createPagination() {
+        slides.forEach((slide, index) => {
+          const dot = document.createElement("button");
+          dot.className = "page-dot";
+          dot.title = `Go to slide ${index + 1}`;
+          dot.addEventListener("click", () => goToSlide(index));
+          pagination.appendChild(dot);
+        });
+      }
+
+      function updatePagination() {
+        const dots = pagination.querySelectorAll(".page-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentIndex);
+        });
+      }
+
+      function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= slides.length) index = slides.length - 1;
+
+        // Remove active class
+        slides.forEach(s => {
+          s.classList.remove("active");
+          // Optional: Reset rotation for re-entry effect
+          s.style.transform = "translateY(50px) scale(0.95)";
+        });
+
+        currentIndex = index;
+
+        // Add active class with delay for smooth re-render
+        setTimeout(() => {
+          slides[currentIndex].classList.add("active");
+          slides[currentIndex].style.transform = "translateY(0) scale(1)";
+        }, 50);
+
+        updatePagination();
+      }
+
+      function goNext() {
+        if (currentIndex < slides.length - 1) {
+          goToSlide(currentIndex + 1);
+        }
+      }
+
+      function goPrev() {
+        if (currentIndex > 0) {
+          goToSlide(currentIndex - 1);
+        }
+      }
+
+      // Initial Setup
+      createPagination();
+      updatePagination();
+
+      // Event Listeners
+      prevBtn.addEventListener("click", goPrev);
+      nextBtn.addEventListener("click", goNext);
+      if (startBtn) startBtn.addEventListener("click", goNext);
+
+      // Keyboard Nav
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") goNext();
+        if (e.key === "ArrowLeft") goPrev();
+      });
+
+    })();
+  </script>
+</body>
+
+</html>
