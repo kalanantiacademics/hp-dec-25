@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>ScratchJr-OFF-D3-T1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Fonts: Added 'Fredoka' for a fun, rounded look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      /* Palette: Deep Jungle/Muted Forest Theme */
+      --blue-main: #3cb371;
+      /* Medium Sea Green */
+      --blue-dark: #1b4332;
+      /* Dark Jungle Green */
+      --blue-soft: #95d5b2;
+      /* Soft Sage Green */
+      --yellow: #f4d03f;
+      /* Muted Gold */
+      --orange: #e67e22;
+      /* Carrot */
+      --purple: #9b59b6;
+      /* Amethyst */
+
+      /* Gradient: subtle dark overlay */
+      --bg-gradient: linear-gradient(180deg, #081c15 0%, #1b4332 100%);
+
+      --text-main: #e8f5e9;
+      /* Soft White/Greenish tint */
+      --text-muted: #b7e4c7;
+      /* Pale Green text */
+
+      /* Card Background: Deep Dark Teal/Green (Toned Down) */
+      --card-bg: rgba(6, 28, 20, 0.85);
+      /* Very Dark Jungle Green opacity */
+
+      --radius-xl: 30px;
+      --radius-md: 16px;
+      --shadow-soft: 0 15px 35px rgba(0, 20, 10, 0.4);
+      --shadow-hover: 0 20px 40px rgba(60, 179, 113, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Lexend", sans-serif;
+      background: url('https://images2.imgbox.com/7f/cf/WL3WUAcp_o.png') no-repeat center bottom fixed;
+      background-size: cover;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+
+    /* Typography Overrides for Fun */
+    h1,
+    h2,
+    h3,
+    .slide-title,
+    .number-label,
+    .slide-cover-heading {
+      font-family: "Fredoka", sans-serif;
+      /* Rounded font for headings */
+      letter-spacing: 0.02em;
+    }
+
+    .deck-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* --- LOGO POSITIONS (NEW) --- */
+    .bg-logos {
+      position: fixed;
+      z-index: 20;
+      /* Above background shapes, below modals if any */
+      pointer-events: none;
+      /* Let clicks pass through */
+    }
+
+    .bg-logos.left {
+      top: 20px;
+      left: 20px;
+    }
+
+    .bg-logos.right {
+      top: 20px;
+      right: 20px;
+    }
+
+    .bg-logos img {
+      height: auto;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      transition: transform 0.3s ease;
+    }
+
+    .bg-logos.left img {
+      max-width: 70px;
+      height: auto;
+    }
+
+    /* Ruangguru Logo size adjusted */
+    .bg-logos.right img {
+      max-width: 130px;
+      height: auto;
+    }
+
+    /* Holiday Program Logo size adjusted */
+
+    /* --- ANIMATED BACKGROUND ELEMENTS (The Fun Stuff) --- */
+    .floating-bg-icon {
+      position: fixed;
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.6);
+      z-index: 0;
+      pointer-events: none;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 900;
+      animation: floatUp 15s infinite linear;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Specific positions for floating icons */
+    .icon-1 {
+      top: 80%;
+      left: 10%;
+      animation-duration: 18s;
+      color: var(--blue-soft);
+      font-size: 3rem;
+    }
+
+    .icon-2 {
+      top: 90%;
+      left: 85%;
+      animation-duration: 22s;
+      color: var(--yellow);
+      font-size: 4rem;
+    }
+
+    .icon-3 {
+      top: 70%;
+      left: 50%;
+      animation-duration: 25s;
+      color: var(--red-soft);
+      font-size: 2.5rem;
+    }
+
+    .icon-4 {
+      top: 20%;
+      right: 5%;
+      animation-duration: 20s;
+      color: var(--purple);
+      opacity: 0.3;
+    }
+
+    .icon-5 {
+      top: 10%;
+      left: 5%;
+      animation-duration: 28s;
+      color: var(--orange);
+      opacity: 0.4;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+      }
+    }
+
+    /* --- TOP BAR --- */
+    .deck-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 999px;
+      background: rgba(10, 47, 24, 0.8);
+      /* Dark Jungle Green */
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0, 50, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      /* Glass Border */
+      margin-top: 3rem;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--orange), var(--yellow), var(--blue-main), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+    }
+
+    .logo-dot span {
+      width: 20px;
+      height: 20px;
+      background: #0a2f18;
+      /* Dark Maroon */
+      border-radius: 50%;
+    }
+
+    .deck-title-main {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+    }
+
+    .deck-title-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .kbd {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+      /* Retro key style */
+      transform: translateY(-2px);
+      font-weight: 700;
+      color: var(--blue-main);
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+    }
+
+    /* --- SLIDE FRAME & CARDS --- */
+    .slide-frame {
+      position: relative;
+      flex: 1;
+      min-height: min(650px, 75vh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      /* For 3D flip effects if needed */
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: 1200px;
+      width: 100%;
+      background: var(--card-bg);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(50px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* Bouncy transition */
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      outline: 2px dashed rgba(46, 204, 113, 0.3);
+      /* Dashed playful outline */
+      outline-offset: -12px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      z-index: 5;
+    }
+
+    /* Decorative Corner Shapes (CSS Only) */
+    .deco-blob {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    .slide::after {
+      content: "★";
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 3rem;
+      color: var(--yellow);
+      transform: rotate(15deg);
+      z-index: 0;
+      opacity: 0.8;
+      text-shadow: 0 0 10px var(--yellow);
+    }
+
+    /* Content Styling */
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .slide-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .slide-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-weight: 700;
+      background: rgba(46, 204, 113, 0.15);
+      color: var(--blue-main);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .slide-title {
+      font-size: 2.8rem;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+    }
+
+    .slide-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      max-width: 600px;
+    }
+
+    /* --- GAMIFIED ELEMENTS --- */
+
+    /* Number Cards / Features */
+    .number-blocks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .number-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: default;
+    }
+
+    .number-card:hover {
+      transform: translateY(-10px) rotate(-2deg);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--blue-main);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .number-card:nth-child(2):hover {
+      transform: translateY(-10px) rotate(2deg);
+    }
+
+    .number-card:nth-child(3):hover {
+      transform: translateY(-10px) rotate(-1deg);
+    }
+
+    .number-label {
+      font-size: 2rem;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      background: rgba(255, 107, 107, 0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.2);
+    }
+
+    .number-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Pill Lists (Candy Style) */
+    .pill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .pill-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: 0.2s ease;
+      box-shadow: none;
+    }
+
+    .pill-item:hover {
+      transform: translateX(10px);
+      border-color: var(--blue-main);
+      box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .pill-index {
+      width: 30px;
+      height: 30px;
+      background: var(--blue-main);
+      color: #0a2f18;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 700;
+    }
+
+    /* Tag Badges */
+    .tag-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1rem;
+      border-left: 6px solid var(--orange);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .tag-card.blue {
+      border-left-color: var(--blue-main);
+    }
+
+    /* Pricing Table (Playful) */
+    .pricing-container {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    table.pricing {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.5rem;
+    }
+
+    table.pricing th {
+      text-align: left;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 0 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    table.pricing td {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    table.pricing tr td:first-child {
+      border-radius: 12px 0 0 12px;
+      font-weight: 600;
+      color: var(--blue-main);
+    }
+
+    table.pricing tr td:last-child {
+      border-radius: 0 12px 12px 0;
+      font-weight: 700;
+      color: var(--yellow);
+    }
+
+    /* Cover Slide Special */
+    .slide-cover {
+      background: linear-gradient(120deg, rgba(10, 47, 24, 0.9) 60%, rgba(46, 204, 113, 0.2) 60%);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      outline: none;
+    }
+
+    .slide-cover-inner {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      width: 100%;
+      height: 100%;
+      padding: 4rem;
+      align-items: center;
+    }
+
+    .slide-cover-heading {
+      font-size: 4rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+    }
+
+    .slide-cover-heading span {
+      color: var(--blue-main);
+      display: block;
+    }
+
+    .slide-cover-tagline {
+      display: inline-block;
+      background: var(--yellow);
+      color: #0a2f18;
+      padding: 0.5rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      transform: rotate(-2deg);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .hero-image-container {
+      position: relative;
+    }
+
+    .hero-image-container img {
+      width: 110%;
+      transform: translateX(10px) rotate(3deg);
+      border-radius: 30px;
+      border: none;
+      box-shadow: none;
+    }
+
+    /* Team Slide */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .team-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 24px;
+    }
+
+    .team-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* --- CONTROLS --- */
+    .deck-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 47, 24, 0.9);
+      padding: 0.5rem;
+      border-radius: 999px;
+      margin-top: 1rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 0.8rem 1.5rem;
+      border-radius: 99px;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-prev {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .btn-next {
+      background: var(--blue-main);
+      color: #0a192f;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 transparent;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .page-dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.3s;
+      border: none;
+    }
+
+    .page-dot.active {
+      background: var(--blue-main);
+      transform: scale(1.5);
+      box-shadow: 0 0 10px var(--blue-main);
+    }
+
+    /* Utility */
+    .desktop-hint {
+      display: none;
+    }
+
+    @media (min-width: 600px) {
+      .desktop-hint {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Fixed Corner Logos -->
+  <div class="bg-logos left">
+    <img src="https://images2.imgbox.com/51/6a/xhLlGQcZ_o.png" alt="Logo Ruangguru Coding" />
+  </div>
+  <div class="bg-logos right">
+    <img src="https://images2.imgbox.com/b1/9e/5ZGPu89r_o.png" alt="Logo Holiday Program" />
+  </div>
+
+  <!-- Floating Fun Icons -->
+  <div class="floating-bg-icon icon-1">🏝️</div>
+  <div class="floating-bg-icon icon-2">🐅</div>
+  <div class="floating-bg-icon icon-3">🕍</div>
+  <div class="floating-bg-icon icon-4">🐘</div>
+  <div class="floating-bg-icon icon-5">🍚</div>
+
+  <div class="deck-wrapper">
+
+    <header class="deck-topbar">
+      <div class="logo-container">
+        <img src="https://images2.imgbox.com/41/92/DsVyHQSh_o.png" alt="Logo" style="height: 50px; width: auto;" />
+        <div>
+          <div class="deck-title-main">Scratch Junior Day 3 (Showcase)</div>
+          <div class="deck-title-sub">Final Project & Presentation</div>
+        </div>
+      </div>
+      <div class="desktop-hint">
+        <span class="deck-title-sub">Gunakan <span class="kbd">→</span> untuk lanjut</span>
+      </div>
+    </header>
+
+    <main class="slide-frame">
+
+      <!-- SLIDE 0: COVER -->
+      <section class="slide slide-cover active" data-slide="0">
+        <div class="slide-cover-inner">
+          <div>
+            <div class="slide-cover-tagline">Holiday Program - Day 3</div>
+            <h1 class="slide-cover-heading">The West Indonesia Story!<br><span>Final Project</span></h1>
+            <p style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 2rem;">
+              Menyempurnakan Misi & <strong>Presentasi Ranger!</strong> 🎤
+            </p>
+            <button class="btn btn-next" id="startBtn">Mulai Pameran 🚀</button>
+          </div>
+          <div class="hero-image-container">
+            <img src="https://images2.imgbox.com/77/17/8Yar2f72_o.png" alt="Anak-anak belajar coding" />
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 1: WARMER -->
+      <section class="slide" data-slide="1">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Ujian Logika Ranger 🧠</span>
+            <h2 class="slide-title">Cek Kesiapan!</h2>
+            <p class="instruction-text">Sebelum pameran dimulai, Komandan harus memastikan logika kalian tajam.</p>
+            <br>
+            <div class="rpg-box">
+              <p>Kerjakan soal <strong>Post-Test</strong> di tablet kalian sekarang!</p>
+              <p style="text-align: center; margin-top: 10px; font-size: 1.2rem; color: #f1c40f;">
+                🔗 <a href="https://bit.ly/post-sjr-t1" target="_blank"
+                  style="color: #f1c40f; text-decoration: underline;">bit.ly/post-sjr-t1</a>
+              </p>
+            </div>
+
+            <!-- TIMER -->
+            <div style="margin-top: 20px; text-align: center;">
+              <div id="timerDisplay" style="font-size: 3rem; font-weight: bold; margin-bottom: 10px;">10:00</div>
+              <button class="btn btn-next" onclick="startTimer()">Start ⏳</button>
+              <button class="btn btn-prev" onclick="resetTimer()">Reset 🔄</button>
+            </div>
+            <script>
+              let timerInterval;
+              let timeLeft = 600; // 10 minutes
+
+              function updateDisplay() {
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                document.getElementById('timerDisplay').textContent =
+                  `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+              }
+
+              function startTimer() {
+                if (timerInterval) return; // Prevent multiple clicks
+                timerInterval = setInterval(() => {
+                  if (timeLeft > 0) {
+                    timeLeft--;
+                    updateDisplay();
+                  } else {
+                    clearInterval(timerInterval);
+                    alert("Waktu Habis! ⏰");
+                  }
+                }, 1000);
+              }
+
+              function resetTimer() {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timeLeft = 600;
+                updateDisplay();
+              }
+            </script>
+
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <div style="font-size: 8rem; filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));">📝</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: ACTIVITY 1 - CHECKLIST -->
+      <section class="slide" data-slide="2">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Cek Kelengkapan Misi ✅</h2>
+          <p class="instruction-text" style="margin-bottom: 2rem;">Apakah 4 halaman ceritamu sudah lengkap?</p>
+
+          <div class="number-blocks" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="number-card">
+              <div class="number-label">1</div>
+              <div class="number-title">Hutan</div>
+              <p class="number-desc">Ada Monyet/Orangutan?</p>
+            </div>
+            <div class="number-card">
+              <div class="number-label">2</div>
+              <div class="number-title">Sungai</div>
+              <p class="number-desc">Ada Gajah?</p>
+            </div>
+            <div class="number-card">
+              <div class="number-label">3</div>
+              <div class="number-title">Candi</div>
+              <p class="number-desc">Ada Borobudur?</p>
+            </div>
+            <div class="number-card">
+              <div class="number-label">4</div>
+              <div class="number-title">Warung</div>
+              <p class="number-desc">Ada Makanan Khas?</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: ACTIVITY 1 - INNOVATION -->
+      <section class="slide" data-slide="3">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Tantangan Inovasi 💡</span>
+            <p class="instruction-text">Buat karyamu lebih keren dengan ide ini:</p>
+            <br>
+            <ul class="pill-list">
+              <li class="pill-item">
+                <span class="pill-index">🎙️</span>
+                <div class="pill-content">
+                  <strong>Rekam Suara</strong>
+                  <div class="pill-subtitle">Tiru suara Gajah atau Monyet!</div>
+                </div>
+              </li>
+              <li class="pill-item">
+                <span class="pill-index">🐰</span>
+                <div class="pill-content">
+                  <strong>Tambah Teman</strong>
+                  <div class="pill-subtitle">Karakter lain yang ikut jalan-jalan.</div>
+                </div>
+              </li>
+              <li class="pill-item">
+                <span class="pill-index">🎨</span>
+                <div class="pill-content">
+                  <strong>Ubah Warna</strong>
+                  <div class="pill-subtitle">Ganti warna piring atau baju karakter.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/d29f6304-7607-4504-8435-816940bac504.gif"
+              alt="Innovation" style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: ACTIVITY 2 - PEER REVIEW SWAP -->
+      <section class="slide" data-slide="4">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Tukar Tablet & Mainkan! 🔄</h2>
+          <div class="rpg-box story-text" style="margin: 2rem auto; max-width: 800px;">
+            <p style="font-size: 1.5rem;">Tukar tablet dengan teman di sebelahmu.</p>
+            <br>
+            <p>Mainkan gamenya dari awal sampai akhir.</p>
+            <p><strong>Jangan komentar dulu, mainkan saja ya! 🤫</strong></p>
+          </div>
+          <div style="font-size: 5rem;">📱 ↔️ 📱</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: ACTIVITY 2 - FEEDBACK -->
+      <section class="slide" data-slide="5">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Sesi Curhat Ranger 🗣️</span>
+            <p class="instruction-text">Kembalikan tablet dan sampaikan:</p>
+            <br>
+            <div class="tag-card blue" style="margin-bottom: 1rem;">
+              <h3>👍 Pujian</h3>
+              <p>"Aku suka bagian..." (Misal: Suara gajahmu lucu)</p>
+            </div>
+            <div class="tag-card" style="border-left-color: var(--yellow);">
+              <h3>💡 Saran</h3>
+              <p>"Sebaiknya..." (Misal: Jalannya terlalu cepat)</p>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/6d45d207-0ef8-4522-a9ba-f28dca9c1c7d.gif"
+              alt="Feedback" style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: ACTIVITY 3 - PREP -->
+      <section class="slide" data-slide="6">
+        <div class="slide-content instruction-split">
+          <div>
+            <span class="instruction-highlight">Siap Presentasi? 🎤</span>
+            <p class="instruction-text">Nanti di depan, bicara 4 hal ini:</p>
+            <br>
+            <ul class="pill-list">
+              <li class="pill-item">
+                <span class="pill-index">1</span>
+                <strong>Nama Saya...</strong>
+              </li>
+              <li class="pill-item">
+                <span class="pill-index">2</span>
+                <strong>Inovasi Saya</strong> ("Aku menambahkan...")
+              </li>
+              <li class="pill-item">
+                <span class="pill-index">3</span>
+                <strong>Masukan Teman</strong> ("Tadi Budi bilang...")
+              </li>
+              <li class="pill-item">
+                <span class="pill-index">4</span>
+                <strong>Demo Game!</strong>
+              </li>
+            </ul>
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <div style="font-size: 8rem;">🎙️</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: STAGE -->
+      <section class="slide" data-slide="7">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="slide-title">Panggung Pameran 🌟</h2>
+          <p class="slide-subtitle">Giliranmu bersinar! Maju ke depan dan tunjukkan karyamu.</p>
+          <div style="margin-top: 2rem; position: relative;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/77d68f1c-f146-4b63-afe9-4da3f17b38bb.png"
+              alt="Stage" style="width: 600px; border-radius: 20px; box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: CLOSING -->
+      <section class="slide" data-slide="8">
+        <div class="slide-content"
+          style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h1
+            style="font-size: 4rem; color: #fff; text-shadow: 0 4px 10px rgba(46, 204, 113, 0.5); margin-bottom: 2rem;">
+            Misi Selesai! 🎓</h1>
+          <p style="font-size: 2rem; color: var(--yellow); margin-bottom: 3rem;">Selamat Lulus Ranger Barat!</p>
+          <div style="margin-top: 1rem;">
+            <img src="https://cdn-web-2.ruangguru.com/landing-pages/assets/e3595324-fcb6-490a-b306-2a0f25c64f33.png"
+              alt="Graduation" style="width: 500px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: TEASER -->
+      <section class="slide" data-slide="9">
+        <div class="slide-content" style="text-align: center; display: block;">
+          <h2 class="story-title">Next: Indonesia Timur! 🐲</h2>
+          <div class="rpg-box story-text">
+            <p>Minggu depan, siapkan baju pelampung kalian...</p>
+            <br>
+            <p>Kita akan terbang ke <strong>INDONESIA TIMUR!</strong></p>
+            <p style="font-size: 1.5rem; margin-top: 1rem;">Dan lari dari kejaran <span
+                style="color: var(--orange); font-weight: bold;">KOMODO DRAGON!</span> 🦎🔥</p>
+          </div>
+          <div style="margin-top: 2rem; font-size: 5rem;">🏝️🚤🦖</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Controls -->
+    <footer class="deck-controls">
+      <button class="btn btn-prev" id="prevBtn">← Kembali</button>
+      <div class="pagination" id="pagination">
+        <!-- Dots generated by JS -->
+      </div>
+      <button class="btn btn-next" id="nextBtn">Lanjut →</button>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const startBtn = document.getElementById("startBtn");
+      const pagination = document.getElementById("pagination");
+
+      let currentIndex = 0;
+
+      function createPagination() {
+        pagination.innerHTML = "";
+        slides.forEach((slide, index) => {
+          const dot = document.createElement("button");
+          dot.className = "page-dot";
+          dot.title = `Go to slide ${index + 1}`;
+          dot.addEventListener("click", () => goToSlide(index));
+          pagination.appendChild(dot);
+        });
+      }
+
+      function updatePagination() {
+        const dots = pagination.querySelectorAll(".page-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentIndex);
+        });
+      }
+
+      function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= slides.length) index = slides.length - 1;
+
+        // Remove active class
+        slides.forEach(s => {
+          s.classList.remove("active");
+          // Optional: Reset rotation for re-entry effect
+          s.style.transform = "translateY(50px) scale(0.95)";
+        });
+
+        currentIndex = index;
+
+        // Add active class with delay for smooth re-render
+        setTimeout(() => {
+          slides[currentIndex].classList.add("active");
+          slides[currentIndex].style.transform = "translateY(0) scale(1)";
+        }, 50);
+
+        updatePagination();
+      }
+
+      function goNext() {
+        if (currentIndex < slides.length - 1) {
+          goToSlide(currentIndex + 1);
+        }
+      }
+
+      function goPrev() {
+        if (currentIndex > 0) {
+          goToSlide(currentIndex - 1);
+        }
+      }
+
+      // Initial Setup
+      createPagination();
+      updatePagination();
+
+      // Event Listeners
+      prevBtn.addEventListener("click", goPrev);
+      nextBtn.addEventListener("click", goNext);
+      if (startBtn) startBtn.addEventListener("click", goNext);
+
+      // Keyboard Nav
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") goNext();
+        if (e.key === "ArrowLeft") goPrev();
+      });
+
+    })();
+  </script>
+</body>
+
+</html>
