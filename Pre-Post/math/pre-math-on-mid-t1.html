@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fun Math - Timing The Island</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Sunset Island Theme - Orange & Warm */
+            --purple-bg-grad-start: #FF8008;
+            /* Orange */
+            --purple-bg-grad-end: #FFC837;
+            /* Gold */
+
+            --purple-card: rgba(255, 255, 255, 0.95);
+            /* White Glass */
+
+            --blue-main: #d35400;
+            /* Pumpkin Orange */
+            --text-light: #d35400;
+            /* Deep Orange Text */
+            --yellow: #f39c12;
+            /* Accent */
+
+            /* Button Colors - Yellow/Orange pops on Navy */
+            --btn-grad-start: #FFD200;
+            /* Yellow */
+            --btn-grad-end: #F7971E;
+            /* Orange */
+
+            --radius-xl: 32px;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: "Lexend", sans-serif;
+            /* Deep mystical purple gradient */
+            background: linear-gradient(180deg, var(--purple-bg-grad-start) 0%, var(--purple-bg-grad-end) 100%) fixed;
+            color: var(--text-light);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- VISUALS --- */
+
+        /* Fixed Background Landscape props - Indonesia Theme */
+        .bg-decor {
+            position: fixed;
+            bottom: 0;
+            z-index: 1;
+            width: 50%;
+            max-width: 600px;
+            pointer-events: none;
+            /* Monotone purple tint */
+            filter: grayscale(100%) sepia(100%) hue-rotate(220deg) brightness(0.4) contrast(1.2);
+            opacity: 0.6;
+        }
+
+        .bg-decor.left {
+            left: -5%;
+        }
+
+        .bg-decor.right {
+            right: -5%;
+        }
+
+        /* Floating Characters - Roblox Avatars or Kala/Nana */
+        .char-img {
+            position: absolute;
+            z-index: 20;
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+            animation: float 3s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+
+        .char-kala {
+            bottom: 10%;
+            left: -80px;
+            animation-delay: 0s;
+        }
+
+        .char-nana {
+            bottom: 10%;
+            right: -80px;
+            animation-delay: 1.5s;
+        }
+
+        @media (max-width: 900px) {
+            .char-kala {
+                left: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+
+            .char-nana {
+                right: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Top Bar Logos */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .logo-rgc {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        .logo-hp {
+            height: 100px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        /* --- LAYOUT --- */
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            position: relative;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .slide {
+            /* DEEP PURPLE GLASS */
+            background: var(--purple-card);
+            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+
+            width: 90%;
+            max-width: 700px;
+            height: 80%;
+            max-height: 700px;
+
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.9) translateY(40px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            z-index: 10;
+        }
+
+        .slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: scale(0.9) translateY(-40px);
+            pointer-events: none;
+        }
+
+        /* --- CONTENT TYPOGRAPHY --- */
+
+        h1 {
+            color: var(--blue-main);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            text-shadow: none;
+        }
+
+        h2 {
+            color: var(--blue-main);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            opacity: 1;
+            text-shadow: none;
+            letter-spacing: 0.5px;
+        }
+
+        .main-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        /* --- FORM ELEMENTS --- */
+
+        .form-content {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--blue-main);
+            margin-left: 0.5rem;
+            text-shadow: none;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(255, 200, 55, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        /* --- BUTTONS --- */
+
+        .btn-primary {
+            /* Solid Gold/Orange Gradient - No Green Clash */
+            background: linear-gradient(180deg, var(--btn-grad-start) 0%, var(--btn-grad-end) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 99px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            /* Darker orange/red shadow */
+            box-shadow: 0 6px 0 #8c2e2e, 0 12px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.15s;
+            margin-top: 1rem;
+            position: relative;
+            top: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:active {
+            top: 6px;
+            box-shadow: 0 0 0 #8c2e2e, 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- QUIZ --- */
+
+        .quiz-container {
+            width: 100%;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            text-shadow: none;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option-label:hover {
+            transform: scale(1.02);
+            border-color: var(--blue-main);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .option-label.selected {
+            background: rgba(255, 128, 8, 0.2);
+            border-color: var(--blue-main);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-label input[type="radio"] {
+            display: none;
+        }
+
+        .option-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* MOBILE ADJUSTMENTS */
+        @media (max-width: 900px) {
+            .char-img {
+                width: 90px;
+                bottom: 125px;
+                z-index: 25;
+            }
+
+            /* Kala Nana Side positions are controlled by .char-kala .char-nana media queries above */
+
+            .slide {
+                width: 92%;
+                height: 82dvh;
+                max-height: none;
+                padding: 1.5rem 1.2rem 6rem 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-top: 3rem;
+            }
+
+            .logo-hp {
+                height: 60px;
+            }
+
+            .logo-rgc {
+                height: 50px;
+            }
+
+            .option-label {
+                padding: 1.2rem;
+            }
+        }
+
+        /* --- CUSTOM MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(20, 25, 30, 0.95);
+            padding: 2rem;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+            width: 320px;
+        }
+
+        .modal-overlay.open .modal-card {
+            transform: scale(1);
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
+        /* SEARCHABLE DROPDOWN CSS */
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(20, 25, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-top: 5px;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 128, 8, 0.3);
+        }
+
+        .modal-text {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .btn-close-modal {
+            background: linear-gradient(180deg, #ff5e62 0%, #ff9966 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 99px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #c0392b, 0 8px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.15s;
+        }
+
+
+
+        .btn-close-modal:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #c0392b;
+        }
+
+        /* Select Styling */
+        select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+            appearance: none;
+            /* remove default arrow */
+            /* Custom arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a29bfe%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1.2rem top 50%;
+            background-size: 0.8rem auto;
+        }
+
+        select:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(255, 200, 55, 0.2);
+            background-color: rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        /* LOADING OVERLAY */
+        #app-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF8008 0%, #FFC837 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* TEST BADGE */
+        .test-badge {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1rem;
+            z-index: 40;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+        }
+
+        .badge-pre {
+            background: linear-gradient(90deg, #4FACFE, #00F2FE);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .badge-post {
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+            color: #024873;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Logos (Fixed) -->
+    <div id="app-loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Memuat Petualangan...</div>
+    </div>
+
+    <!-- BADGE -->
+    <div class="test-badge badge-pre">PRE-TEST</div>
+
+    <div class="top-bar">
+        <div class="logo-group-left">
+            <img src="https://images2.imgbox.com/ab/ea/ZJ3KrsiN_o.png" alt="MC Logos" class="logo-rgc">
+        </div>
+        <div class="logo-group-right">
+            <img src="https://images2.imgbox.com/8c/75/ZLUyHG3a_o.png" alt="Holiday Program" class="logo-hp">
+        </div>
+    </div>
+
+    <!-- Backgrounds (Fixed) -->
+    <img src="https://images2.imgbox.com/5b/31/fVZUqaYf_o.png" alt="Mountain" class="bg-decor left">
+    <img src="https://images2.imgbox.com/08/b3/ikRdSaUJ_o.png" alt="Beach" class="bg-decor right">
+
+    <div class="app-container">
+
+        <!-- Characters (Outside Slide, in Container) -->
+        <img src="https://images2.imgbox.com/04/88/JCqNLSYT_o.png" alt="Kala" class="char-img char-kala">
+        <img src="https://images2.imgbox.com/4b/0b/DMWUdruE_o.png" alt="Nana" class="char-img char-nana">
+
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide active" id="slide-intro">
+
+            <img src="https://images2.imgbox.com/54/cf/pZ1hqh81_o.png" alt="Theme Logo" class="main-logo">
+
+            <h1>Misi: Timing The Island! 🏝️</h1>
+            <h2>Siapkah kamu menaklukkan tantangan Waktu & Sudut?</h2>
+
+            <div class="form-content">
+                <!-- 1. MODE (Fixed Online) -->
+                <div class="form-group" id="group-mode" style="display:none;">
+                    <label>Pilih Mode Belajar:</label>
+                    <select id="input-mode">
+                        <option value="Online" selected>Online</option>
+                    </select>
+                </div>
+
+                <!-- 2. PROGRAM (Fixed cloc) -->
+                <div class="form-group" id="group-program" style="display:none;">
+                    <label>Program Kamu:</label>
+                    <select id="input-program">
+                        <option value="math" selected>Math Class</option>
+                    </select>
+                </div>
+
+                <!-- 3a. CITY (Offline Only) -->
+                <div class="form-group" id="group-city" style="display:none;">
+                    <label>Kota Asal:</label>
+                    <select id="input-city" onchange="handleCityChange()">
+                        <option value="" disabled selected>Pilih Kota / Area...</option>
+                    </select>
+                </div>
+
+                <!-- 3b. BRANCH (Offline Only) -->
+                <div class="form-group" id="group-branch" style="display:none;">
+                    <label>Belajar di Cabang mana</label>
+                    <select id="input-branch" onchange="handleBranchChange()">
+                        <option value="" disabled selected>Pilih Cabang...</option>
+                    </select>
+                </div>
+
+                <!-- 4. TEACHER -->
+                <div class="form-group" id="group-teacher" style="display:none;">
+                    <label>Siapa Pengajarnya?</label>
+                    <select id="input-teacher" onchange="handleTeacherChange()">
+                        <option value="" disabled selected>Pilih Guru...</option>
+                    </select>
+                </div>
+
+                <!-- 5. NAME (Final Step) -->
+                <div class="form-group" id="group-name" style="display:none;">
+                    <label>Siapa nama agen penjelajah?</label>
+                    <div style="position:relative;">
+                        <input type="text" id="input-name-search" placeholder="Ketik / Pilih Namamu..."
+                            oninput="filterNames()" onclick="toggleDropdown()" autocomplete="off">
+                        <div id="dropdown-list-name" class="dropdown-list"></div>
+                    </div>
+
+                    <!-- Manual Input Fallback -->
+                    <div id="manual-name-container" style="display:none; margin-top: 1rem;">
+                        <input type="text" id="input-name-manual" placeholder="Ketik Namamu Lengkap..."
+                            oninput="checkFormCompletion()">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="startQuiz()" id="btn-start"
+                    style="opacity: 0.5; pointer-events: none;">Mulai Petualangan! 🚀</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: QUIZ -->
+        <div class="slide" id="slide-quiz">
+            <h1>Timing The Island! 🏝️</h1>
+            <h2>Jawab pertanyaan untuk membuka gerbang!</h2>
+
+            <div class="quiz-container">
+
+                <!-- Q1 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        1. Lihat jam dinding ini. Pukul berapakah tepatnya waktu yang ditunjukkan?
+                        <br><br>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/78739cb2-2556-4a50-8885-98855216fea5.jpg"
+                            style="width:100%; max-width:400px; display:block; margin:0 auto; border-radius:8px; height: auto;">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="A">
+                            <span class="option-text">A. 07:00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="B">
+                            <span class="option-text">B. 08:00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="C">
+                            <span class="option-text">C. 12:35</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="D">
+                            <span class="option-text">D. 07:12</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        2. Jarum pendek ada di tengah-tengah angka 10 dan 11. Pukul berapakah ini?
+                        <br><br>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/232794ca-23bc-4aec-bcd2-3f3a67f91394.jpg"
+                            style="width:100%; max-width:400px; display:block; margin:0 auto; border-radius:8px; height: auto;">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="A">
+                            <span class="option-text">A. 10:00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="B">
+                            <span class="option-text">B. 11:30</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="C">
+                            <span class="option-text">C. 06:50</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="D">
+                            <span class="option-text">D. 10:30</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        3. Perhatikan sudut yang dibentuk jarum jam pada pukul 09:00. Sudut apakah ini?
+                        <br><br>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/8987a5d7-473b-4f09-b3c5-3685da630e0c.jpg"
+                            style="width:100%; max-width:400px; display:block; margin:0 auto; border-radius:8px; height: auto;">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="A">
+                            <span class="option-text">A. Lancip</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="B">
+                            <span class="option-text">B. Siku-siku</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="C">
+                            <span class="option-text">C. Tumpul</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="D">
+                            <span class="option-text">D. Lurus</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        4. Perhatikan jam di bawah ini (Pukul 01:00). Sudut yang terbentuk antara kedua jarum jam
+                        tersebut adalah sudut...
+                        <br><br>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/ab3a876d-cfe9-4aa9-9227-81eaf7330af2.jpg"
+                            style="width:100%; max-width:400px; display:block; margin:0 auto; border-radius:8px; height: auto;">
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="A">
+                            <span class="option-text">A. Tumpul</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="B">
+                            <span class="option-text">B. Siku-siku</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="C">
+                            <span class="option-text">C. Lancip</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="D">
+                            <span class="option-text">D. Nol</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        5. Keluarga Budi sedang makan malam bersama pada pukul 19.00. Format waktu 12 jam (AM/PM) yang
+                        tepat adalah...
+                    </div>
+                    <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="A">
+                            <span class="option-text">A. 07:00 AM</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="B">
+                            <span class="option-text">B. 07:00 PM</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        6. Siti belajar Matematika mulai pukul 10:00 dan selesai pukul 11:30. Berapa lama Siti belajar?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="A">
+                            <span class="option-text">A. 30 Menit</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="B">
+                            <span class="option-text">B. 1 Jam</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="C">
+                            <span class="option-text">C. 2 Jam</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="D">
+                            <span class="option-text">D. 1 Jam 30 Menit</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q7 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        7. Adik menonton film kartun selama 2 jam. Jika film mulai pukul 13:00 (1 siang), pukul berapa
+                        film selesai?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="A">
+                            <span class="option-text">A. 14:00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="B">
+                            <span class="option-text">B. 16:00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="C">
+                            <span class="option-text">C. 15:00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="D">
+                            <span class="option-text">D. 13:02</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q8 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        8. Manakah gambar jam yang menunjukkan pukul 02:45?
+                    </div>
+                    <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2d27d1f7-fdb5-4022-b3d2-f06393b20fc0.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q8" value="A">
+                            <span class="option-text">A</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/e7127fec-48ec-4b1e-95eb-e7ea7494aa4b.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q8" value="B">
+                            <span class="option-text">B</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/4add7171-8f7b-495e-96a4-04287eda6ad2.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q8" value="C">
+                            <span class="option-text">C</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/57a6d218-3e11-4aa2-94c7-a04df0fa52fc.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q8" value="D">
+                            <span class="option-text">D</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q9 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        9. Manakah gambar jam yang menunjukkan pukul 08:15?
+                    </div>
+                    <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/802db0f0-6040-470d-a918-9f2186cbebe0.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q9" value="A">
+                            <span class="option-text">A</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/19dd9c62-f7a4-4b82-b0d1-eff223c74017.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q9" value="B">
+                            <span class="option-text">B</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/7edeb0b3-25e8-4276-a2ba-01108f5115c8.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q9" value="C">
+                            <span class="option-text">C</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)"
+                            style="flex-direction: column; text-align: center;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/633b311b-cb5d-4157-9b2d-8131eebf422f.jpg"
+                                style="width:100%; border-radius:8px; margin-bottom:0.5rem;">
+                            <input type="radio" name="q9" value="D">
+                            <span class="option-text">D</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q10 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        10. Manakah pasangan kegiatan dan waktu di bawah ini yang paling tepat dan masuk akal?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="A">
+                            <span class="option-text">A. Tidur Malam - 08:00 AM</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="B">
+                            <span class="option-text">B. Sarapan Pagi - 06:30 PM</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="C">
+                            <span class="option-text">C. Sarapan Pagi - 06:30 AM</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="D">
+                            <span class="option-text">D. Makan Siang - 12:00 AM</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="height: 1rem;"></div> <!-- Spacer -->
+                <button class="btn-primary" onclick="submitTest()">Kirim Jawaban! 🌟</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CUSTOM MODAL HTML -->
+    <div class="modal-overlay" id="custom-modal" onclick="hideModal()">
+        <div class="modal-card">
+            <div class="modal-text" id="modal-message">Pesan disini...</div>
+        </div>
+    </div>
+    <script>
+        // Data Store
+        const userData = {
+            name: '',
+            mode: 'Online',
+            program: 'math',
+            city: '',
+            branch: '',
+            teacher: '',
+            answers: {}
+        };
+
+        // Cache for Sheet Data
+        let appData = null;
+
+        // Web App URL for data
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyLEBGpAri8cZSDHeOoJRzf7-3c8RKHH1zNP2A4Fkl54NXROhFpegTYM3mEAL02Y_Co/exec";
+
+        window.onload = function () {
+            // Fetch data from GAS Web App
+            console.log("Fetching data from GAS...");
+
+            fetch(GAS_URL + '?program=math')
+                .then(response => response.json())
+                .then(data => {
+                    onDataReceived(data);
+                })
+                .catch(err => {
+                    onDataFail(err);
+                });
+        };
+
+        // AUTO TRIGGER
+        // If data arrives and Program is selected -> Trigger Program Change (which reveals Mode)
+        function onDataReceived(data) {
+            console.log('App Data Received:', data);
+            appData = data;
+
+            // Hide loading modal
+            hideModal();
+
+            // Hide Initial Overlay
+            const overlay = document.getElementById('app-loading-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+
+            // Auto-Initialize for CoC Online
+            // Populate BOTH independently because for Online, Student Names don't depend on Teacher
+            populateOnlineTeachers('math');
+            populateStudentNames();
+        }
+
+        /* --- DROPDOWN LOGIC --- */
+
+        // NOTE: handleModeChange and handleProgramChange are bypassed 
+        // because we are hardcoding Mode=Online and Program=cloc.
+
+        function populateOnlineTeachers(prog) {
+            // ONLINE POPULATE
+            const teacherSelect = document.getElementById('input-teacher');
+            teacherSelect.innerHTML = '<option value="" disabled selected>Pilih Guru...</option>';
+
+            const onlineList = appData.onlineTeachers[prog] || [];
+
+            if (onlineList.length === 0) {
+                document.getElementById('group-teacher').style.display = 'none';
+                // If no teachers, maybe just show name? 
+            } else {
+                onlineList.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    teacherSelect.appendChild(opt);
+                });
+                document.getElementById('group-teacher').style.display = 'block';
+
+                // Auto-select if only 1
+                if (onlineList.length === 1) {
+                    teacherSelect.value = onlineList[0];
+                    handleTeacherChange();
+                }
+            }
+        }
+
+        function handleTeacherChange() {
+            userData.teacher = document.getElementById('input-teacher').value;
+            // No need to re-populate students for Online mode as they are independent
+            // Just check completion
+            checkFormCompletion();
+        }
+
+        let allStudentNames = []; // Store for filtering
+
+        function populateStudentNames() {
+            const prog = userData.program; // 'cloc' / 'math'
+            const listContainer = document.getElementById('dropdown-list-name');
+            listContainer.innerHTML = ''; // Clear
+
+            allStudentNames = [];
+
+            // Online Students
+            if (appData && appData.onlineStudents) {
+                allStudentNames = appData.onlineStudents[prog] || [];
+            }
+
+            if (allStudentNames.length === 0) {
+                // Even if empty, show Manual Option
+                renderDropdownItems([]);
+                document.getElementById('group-name').style.display = 'block';
+            } else {
+                renderDropdownItems(allStudentNames);
+                document.getElementById('group-name').style.display = 'block';
+            }
+        }
+
+        function renderDropdownItems(names) {
+            const listContainer = document.getElementById('dropdown-list-name');
+            listContainer.innerHTML = '';
+
+            // Sort alphabetical
+            names.sort();
+
+            names.forEach(name => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = name;
+                item.onclick = () => selectName(name);
+                listContainer.appendChild(item);
+            });
+
+            // Add Manual Option at BOTTOM
+            const manualItem = document.createElement('div');
+            manualItem.className = 'dropdown-item';
+            manualItem.innerHTML = '<b>✍️ Nama Tidak Ada / Input Manual</b>';
+            manualItem.style.color = '#FFD200';
+            manualItem.onclick = () => selectName('manual_input');
+            listContainer.appendChild(manualItem);
+        }
+
+        function toggleDropdown() {
+            const list = document.getElementById('dropdown-list-name');
+            if (list.style.display === 'block') {
+                list.style.display = 'none';
+            } else {
+                list.style.display = 'block';
+                // Reset filter when opening? Optional.
+                // renderDropdownItems(allStudentNames);
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            const container = document.getElementById('group-name');
+            if (!container.contains(e.target)) {
+                document.getElementById('dropdown-list-name').style.display = 'none';
+            }
+        });
+
+        function filterNames() {
+            const input = document.getElementById('input-name-search');
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById('dropdown-list-name');
+
+            // Show list if user types
+            list.style.display = 'block';
+
+            if (!filter) {
+                renderDropdownItems(allStudentNames);
+                return;
+            }
+
+            const filtered = allStudentNames.filter(name => name.toLowerCase().includes(filter));
+            renderDropdownItems(filtered);
+        }
+
+        function selectName(name) {
+            const searchInput = document.getElementById('input-name-search');
+            const list = document.getElementById('dropdown-list-name');
+            const manualContainer = document.getElementById('manual-name-container');
+
+            list.style.display = 'none';
+
+            if (name === 'manual_input') {
+                searchInput.value = "Manual Input"; // Or clear it?
+                userData.name = ""; // Reset
+                manualContainer.style.display = 'block';
+                document.getElementById('input-name-manual').focus();
+            } else {
+                searchInput.value = name;
+                manualContainer.style.display = 'none';
+
+                // Store Name
+                userData.name = name;
+                // Clear manual input just in case
+                document.getElementById('input-name-manual').value = "";
+            }
+            checkFormCompletion();
+        }
+
+        function checkFormCompletion() {
+            // Check if manual input is active
+            const manualContainer = document.getElementById('manual-name-container');
+
+            if (manualContainer.style.display === 'block') {
+                const manualVal = document.getElementById('input-name-manual').value;
+                userData.name = manualVal.trim();
+            }
+            // Else userData.name is already set by selectName
+
+            const btn = document.getElementById('btn-start');
+
+            if (userData.name && userData.name.length > 0) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                btn.style.transform = 'scale(1.05)';
+            } else {
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+                btn.style.transform = 'scale(1)';
+            }
+        }
+
+        /* --- QUIZ NAVIGATION --- */
+
+        function startQuiz() {
+            if (!userData.name) return;
+
+            // Log start (optional)
+            console.log("Starting Quiz for:", userData.name);
+
+            // Transition
+            const intro = document.getElementById('slide-intro');
+            const quiz = document.getElementById('slide-quiz');
+
+            intro.classList.remove('active');
+            intro.classList.add('exit');
+
+            setTimeout(() => {
+                intro.style.display = 'none';
+                quiz.style.display = 'flex'; // Enable flex first
+                // Force reflow
+                void quiz.offsetWidth;
+                quiz.classList.remove('exit');
+                quiz.classList.add('active');
+            }, 500);
+        }
+
+        function selectOption(label) {
+            // Visual selection
+            const group = label.parentElement;
+            const labels = group.querySelectorAll('.option-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+
+            // Save Answer
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+                const name = radio.name; // q1, q2...
+                userData[name] = radio.value;
+                console.log("Selected:", name, userData[name]);
+            }
+        }
+
+        // ANSWER KEY (Timing The Island)
+        const answerKey = {
+            q1: 'A', q2: 'D', q3: 'B', q4: 'C', q5: 'B',
+            q6: 'D', q7: 'C', q8: 'C', q9: 'D', q10: 'C'
+        };
+
+        function calculateScore() {
+            let correct = 0;
+            // 10 Questions, 10 points each = 100 max
+            for (let i = 1; i <= 10; i++) {
+                const key = `q${i}`;
+                if (userData[key] && userData[key] === answerKey[key]) {
+                    correct++;
+                }
+            }
+            return correct * 10;
+        }
+
+        /* --- SUBMISSION --- */
+
+        function submitTest() {
+            // Validate all 10 questions
+            const missing = [];
+            for (let i = 1; i <= 10; i++) {
+                if (!userData[`q${i}`]) missing.push(i);
+            }
+
+            if (missing.length > 0) {
+                showModal(`Opps! Kamu belum menjawab soal nomor: ${missing.join(', ')}`);
+                return;
+            }
+
+            // Calculate Score
+            const finalScore = calculateScore();
+            console.log("Final Score:", finalScore);
+
+            // Show submitting
+            showModal("Sedang mengirim jawaban... 🚀", true);
+
+            // Construct Payload
+            const payload = {
+                timestamp: new Date().toISOString(),
+                mode: userData.mode,
+                program: userData.program,
+                city: 'Online',
+                branch: 'Online',
+                teacher: userData.teacher,
+                name: userData.name,
+                score: finalScore, // Send Score
+                // Answers
+                q1: userData.q1, q2: userData.q2, q3: userData.q3, q4: userData.q4, q5: userData.q5,
+                q6: userData.q6, q7: userData.q7, q8: userData.q8, q9: userData.q9, q10: userData.q10
+            };
+
+            fetch(GAS_URL + '?program=math', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+            }).then(() => {
+                showModal(`Hore! Jawabanmu sudah terkirim! 🎉<br>Skor Kamu: ${finalScore}<br><br><button class="btn-primary" onclick="window.location.reload()" style="padding:0.5rem 1rem; font-size:1rem;">Main Lagi / Exit 🔄</button>`, true);
+                const btn = document.querySelector('button[onclick="submitTest()"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = "Terkirim!";
+                }
+            }).catch(err => {
+                console.error(err);
+                showModal("Yah, gagal mengirim. Coba lagi ya! 🥺");
+            });
+        }
+
+        /* --- MODAL UTILS --- */
+        function showModal(msg, persistent = false) {
+            const m = document.getElementById('custom-modal');
+            const t = document.getElementById('modal-message');
+            t.innerHTML = msg;
+            m.classList.add('open');
+            if (persistent) {
+                m.onclick = null;
+            } else {
+                m.onclick = hideModal;
+            }
+        }
+
+        function hideModal() {
+            document.getElementById('custom-modal').classList.remove('open');
+        }
+    </script>
+</body>
+
+</html>
