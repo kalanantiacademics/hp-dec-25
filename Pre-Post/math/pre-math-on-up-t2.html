@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fun Math - Math Voyager</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lexend:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Ocean Voyager Theme - Blue & Deep */
+            --bg-grad-start: #0f2027;
+            /* Deep Space/Ocean */
+            --bg-grad-end: #203a43;
+            /* Dark Teal */
+
+            --purple-card: rgba(255, 255, 255, 0.95);
+            /* White Glass */
+
+            --blue-main: #004e92;
+            /* Ocean Blue */
+            --text-light: #002d57;
+            /* Navy Text */
+
+            /* Button Colors */
+            --btn-grad-start: #00c6ff;
+            /* Light Blue */
+            --btn-grad-end: #0072ff;
+            /* Deep Blue */
+
+            --radius-xl: 32px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: "Lexend", sans-serif;
+            background: linear-gradient(180deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%) fixed;
+            color: var(--text-light);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- VISUALS --- */
+
+        /* Fixed Background Landscape props - Sea Theme */
+        .bg-decor {
+            position: fixed;
+            bottom: 0;
+            z-index: 1;
+            width: 60%;
+            max-width: 700px;
+            pointer-events: none;
+            opacity: 0.5;
+            filter: grayscale(20%) sepia(20%) hue-rotate(180deg) brightness(0.8);
+        }
+
+        .bg-decor.left {
+            left: -10%;
+        }
+
+        .bg-decor.right {
+            right: -10%;
+        }
+
+        /* Floating Characters */
+        .char-img {
+            position: absolute;
+            z-index: 20;
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+            animation: float 3s infinite ease-in-out alternate;
+            pointer-events: none;
+        }
+
+        .char-kala {
+            bottom: 10%;
+            left: -80px;
+            animation-delay: 0s;
+        }
+
+        .char-nana {
+            bottom: 10%;
+            right: -80px;
+            animation-delay: 1.5s;
+        }
+
+        @media (max-width: 900px) {
+            .char-kala {
+                left: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+
+            .char-nana {
+                right: -20px;
+                bottom: 0;
+                width: 140px;
+            }
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Top Bar Logos */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .logo-rgc {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        .logo-hp {
+            height: 100px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        /* --- LAYOUT --- */
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            position: relative;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .slide {
+            /* DEEP PURPLE GLASS */
+            background: var(--purple-card);
+            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+
+            width: 90%;
+            max-width: 700px;
+            height: 80%;
+            max-height: 700px;
+
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.9) translateY(40px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            z-index: 10;
+        }
+
+        .slide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: scale(0.9) translateY(-40px);
+            pointer-events: none;
+        }
+
+        /* --- CONTENT TYPOGRAPHY --- */
+
+        h1 {
+            color: var(--blue-main);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            text-shadow: none;
+        }
+
+        h2 {
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            text-shadow: none;
+            letter-spacing: 0.5px;
+        }
+
+        .main-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        /* --- FORM ELEMENTS --- */
+
+        .form-content {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--blue-main);
+            margin-left: 0.5rem;
+            text-shadow: none;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(0, 198, 255, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        /* --- BUTTONS --- */
+
+        b,
+        strong {
+            color: #007bff;
+            /* Vibrant Blue for better visibility */
+        }
+
+        .btn-primary {
+            /* Ocean Blue Gradient */
+            background: linear-gradient(180deg, var(--btn-grad-start) 0%, var(--btn-grad-end) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 99px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            font-family: "Lexend", sans-serif;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 6px 0 #0056b3, 0 12px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.15s;
+            margin-top: 1rem;
+            position: relative;
+            top: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:active {
+            top: 6px;
+            box-shadow: 0 0 0 #0056b3, 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- QUIZ --- */
+
+        .quiz-container {
+            width: 100%;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            text-shadow: none;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option-label:hover {
+            transform: scale(1.02);
+            border-color: var(--blue-main);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .option-label.selected {
+            background: rgba(0, 198, 255, 0.2);
+            border-color: var(--blue-main);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-label input[type="radio"] {
+            display: none;
+        }
+
+        .option-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+
+
+        /* MOBILE ADJUSTMENTS */
+        @media (max-width: 900px) {
+            .char-img {
+                width: 90px;
+                bottom: 125px;
+                z-index: 25;
+            }
+
+            .slide {
+                width: 92%;
+                height: 82dvh;
+                max-height: none;
+                padding: 1.5rem 1.2rem 6rem 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-top: 3rem;
+            }
+
+            .logo-hp {
+                height: 60px;
+            }
+
+            .logo-rgc {
+                height: 50px;
+            }
+
+            .option-label {
+                padding: 1.2rem;
+            }
+        }
+
+        /* --- CUSTOM MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(20, 25, 30, 0.95);
+            padding: 2rem;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90%;
+            width: 320px;
+        }
+
+        .modal-overlay.open .modal-card {
+            transform: scale(1);
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
+        /* DROPDOWN & MODAL COMMON STYLES */
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(20, 25, 35, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-top: 5px;
+            z-index: 50;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 198, 255, 0.3);
+        }
+
+        .modal-text {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        /* Select Styling */
+        select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-family: "Lexend", sans-serif;
+            transition: all 0.2s;
+            text-align: center;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a29bfe%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1.2rem top 50%;
+            background-size: 0.8rem auto;
+        }
+
+        select:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 4px rgba(0, 198, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.6);
+            outline: none;
+        }
+
+        /* LOADING OVERLAY */
+        #app-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* TEST BADGE */
+        .test-badge {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1rem;
+            z-index: 40;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Added badge-pre specifically for this file */
+        .badge-pre {
+            background: linear-gradient(90deg, #4FACFE, #00F2FE);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .badge-post {
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+            color: #024873;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Logos -->
+    <div id="app-loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Memuat Petualangan...</div>
+    </div>
+
+    <!-- BADGE CHANGED TO PRE-TEST -->
+    <div class="test-badge badge-pre">PRE-TEST</div>
+
+    <div class="top-bar">
+        <div class="logo-group-left">
+            <img src="https://images2.imgbox.com/ab/ea/ZJ3KrsiN_o.png" alt="MC Logos" class="logo-rgc">
+        </div>
+        <div class="logo-group-right">
+            <img src="https://images2.imgbox.com/8c/75/ZLUyHG3a_o.png" alt="Holiday Program" class="logo-hp">
+        </div>
+    </div>
+
+    <!-- Backgrounds (Fixed) -->
+    <img src="https://images2.imgbox.com/5b/31/fVZUqaYf_o.png" alt="Mountain" class="bg-decor left">
+    <img src="https://images2.imgbox.com/08/b3/ikRdSaUJ_o.png" alt="Beach" class="bg-decor right">
+
+    <div class="app-container">
+
+        <!-- Characters -->
+        <img src="https://images2.imgbox.com/04/88/JCqNLSYT_o.png" alt="Kala" class="char-img char-kala">
+        <img src="https://images2.imgbox.com/4b/0b/DMWUdruE_o.png" alt="Nana" class="char-img char-nana">
+
+        <!-- SLIDE 1: INTRO -->
+        <div class="slide active" id="slide-intro">
+
+            <img src="https://images2.imgbox.com/54/cf/pZ1hqh81_o.png" alt="Theme Logo" class="main-logo">
+
+            <h1>Misi: Math Voyager! ⚓</h1>
+            <h2>Siapkah kamu menaklukkan tantangan Matematika?</h2>
+
+            <div class="form-content">
+                <!-- 1. MODE -->
+                <div class="form-group" id="group-mode" style="display:none;">
+                    <label>Pilih Mode Belajar:</label>
+                    <select id="input-mode">
+                        <option value="Online" selected>Online</option>
+                    </select>
+                </div>
+
+                <!-- 2. PROGRAM -->
+                <div class="form-group" id="group-program" style="display:none;">
+                    <label>Program Kamu:</label>
+                    <select id="input-program">
+                        <option value="math" selected>Math Class</option>
+                    </select>
+                </div>
+
+                <!-- 4. TEACHER -->
+                <div class="form-group" id="group-teacher" style="display:none;">
+                    <label>Siapa Pengajarnya?</label>
+                    <select id="input-teacher" onchange="handleTeacherChange()">
+                        <option value="" disabled selected>Pilih Guru...</option>
+                    </select>
+                </div>
+
+                <!-- 5. NAME -->
+                <div class="form-group" id="group-name" style="display:none;">
+                    <label>Siapa nama agen penjelajah?</label>
+                    <div style="position:relative;">
+                        <input type="text" id="input-name-search" placeholder="Ketik / Pilih Namamu..."
+                            oninput="filterNames()" onclick="toggleDropdown()" autocomplete="off">
+                        <div id="dropdown-list-name" class="dropdown-list"></div>
+                    </div>
+
+                    <div id="manual-name-container" style="display:none; margin-top: 1rem;">
+                        <input type="text" id="input-name-manual" placeholder="Ketik Namamu Lengkap..."
+                            oninput="checkFormCompletion()">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="startQuiz()" id="btn-start"
+                    style="opacity: 0.5; pointer-events: none;">Mulai Petualangan! 🚀</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: QUIZ -->
+        <div class="slide" id="slide-quiz">
+            <h1>Math Voyager! ⚓</h1>
+            <h2>Jawab pertanyaan untuk membuka gerbang!</h2>
+
+            <div class="quiz-container">
+
+                <!-- HEADER SECTION: Ratio & Probability -->
+                <div style="text-align:left; margin-bottom:1rem; opacity:0.8; font-weight:600;">Bagian 1: Ratio & Rate
+                    (Bahan Bakar & Jarak)</div>
+
+                <!-- Q1 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        1. <b>Membaca Peta:</b> Kapten Nami melihat peta dengan skala <b>1 : 500.000</b>. Jika jarak
+                        antara Pulau A dan Pulau B di peta adalah <b>4 cm</b>, berapakah jarak sebenarnya yang harus
+                        ditempuh kapal?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="A">
+                            <span class="option-text">A. 2 km</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="B">
+                            <span class="option-text">B. 20 km</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="C">
+                            <span class="option-text">C. 200 km</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q1" value="D">
+                            <span class="option-text">D. 2.000 km</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        2. <b>Efisiensi Bahan Bakar:</b> Kapal Voyager membutuhkan <b>10 Liter</b> solar untuk menempuh
+                        jarak <b>50 km</b>. Jika Kapten ingin menempuh jarak <b>150 km</b>, berapa liter solar yang
+                        harus disiapkan?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="A">
+                            <span class="option-text">A. 20 Liter</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="B">
+                            <span class="option-text">B. 25 Liter</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="C">
+                            <span class="option-text">C. 30 Liter</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q2" value="D">
+                            <span class="option-text">D. 50 Liter</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        3. <b>Perbandingan Kecepatan:</b> Kapal A dapat menempuh <b>60 km</b> dalam <b>2 jam</b>. Kapal
+                        B dapat menempuh <b>100 km</b> dalam <b>4 jam</b>. Kapal mana yang melaju lebih cepat?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="A">
+                            <span class="option-text">A. Kapal A</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="B">
+                            <span class="option-text">B. Kapal B</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="C">
+                            <span class="option-text">C. Kecepatannya sama</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q3" value="D">
+                            <span class="option-text">D. Tidak dapat ditentukan</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="text-align:left; margin-bottom:1rem; opacity:0.8; font-weight:600;">Bagian 2: Probability
+                    (Prediksi Cuaca)</div>
+
+                <!-- Q4 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        4. <b>Sejarah Cuaca:</b> Dalam 10 hari terakhir berlayar di Laut Banda, tercatat ada <b>2
+                            kali</b> badai. Berdasarkan data ini, berapa peluang terjadinya badai besok?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="A">
+                            <span class="option-text">A. 1/10 (10%)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="B">
+                            <span class="option-text">B. 1/5 (20%)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="C">
+                            <span class="option-text">C. 1/2 (50%)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q4" value="D">
+                            <span class="option-text">D. 4/5 (80%)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        5. <b>Memilih Jalur Aman:</b> Pusat komando memberikan data prediksi cuaca untuk dua jalur
+                        berbeda:<br><br>
+                        - <b>Jalur Utara:</b> Peluang hujan <b>3/5</b><br>
+                        - <b>Jalur Selatan:</b> Peluang hujan <b>1/4</b><br><br>
+                        Jika kamu harus menghindari hujan, jalur mana yang lebih aman dipilih?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="A">
+                            <span class="option-text">A. Jalur Utara (karena 3/5 < 1/4)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="B">
+                            <span class="option-text">B. Jalur Selatan (karena 1/4 < 3/5)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="C">
+                            <span class="option-text">C. Sama saja</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q5" value="D">
+                            <span class="option-text">D. Jalur Utara (karena 3/5 > 1/4)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="text-align:left; margin-bottom:1rem; opacity:0.8; font-weight:600;">Bagian 3: Graph Analysis
+                    (Analisis Data)</div>
+                <div style="text-align:left; font-size:0.9rem; margin-bottom:1rem;">Perhatikan grafik keuntungan
+                    perdagangan rempah di bawah ini untuk menjawab soal no 6 dan 7.</div>
+
+                <!-- BAR CHART -->
+                <div class="question-card" style="padding:1.5rem;">
+
+                    <!-- BAR CHART (Image) -->
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/72b7eb79-5efd-46a4-952c-9d32f90289e3.png"
+                            alt="Grafik Keuntungan"
+                            style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="question-text" style="font-size:1rem; margin-bottom:1rem;">
+                        6. <b>Membaca Data:</b> Berapa besar <b>Pendapatan</b> dari penjualan Pala?
+                    </div>
+                    <div class="options-grid" style="margin-bottom:2rem;">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="A">
+                            <span class="option-text">A. 150 Koin</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="B">
+                            <span class="option-text">B. 250 Koin</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="C">
+                            <span class="option-text">C. 300 Koin</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q6" value="D">
+                            <span class="option-text">D. 350 Koin</span>
+                        </label>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="question-text" style="font-size:1rem;">
+                        7. <b>Analisis Keuntungan:</b> Keuntungan dihitung dari (Pendapatan - Biaya). Manakah
+                        pernyataan
+                        yang benar?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="A">
+                            <span class="option-text">A. Cengkeh memberikan keuntungan lebih besar daripada
+                                Pala.</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="B">
+                            <span class="option-text">B. Pala memberikan keuntungan 200 koin.</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="C">
+                            <span class="option-text">C. Cengkeh memberikan keuntungan 100 koin.</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q7" value="D">
+                            <span class="option-text">D. Pala dan Cengkeh memberikan keuntungan yang sama.</span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div style="text-align:left; margin-bottom:1rem; opacity:0.8; font-weight:600;">Bagian 4: Reasoning
+                    &
+                    Strategy (Pemecahan Masalah)</div>
+
+                <!-- Q8 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        8. <b>Logika Pasang Surut:</b> Kapal besar hanya bisa bersandar jika kedalaman air <b>lebih
+                            dari
+                            5 meter</b>. Data pasang surut:<br><br>
+                        - Pukul 08.00: 4 meter<br>
+                        - Pukul 10.00: 6 meter<br>
+                        - Pukul 12.00: 7 meter<br>
+                        - Pukul 14.00: 3 meter<br><br>
+                        Pada pukul berapa saja kapal aman untuk bersandar?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q8" value="A">
+                            <span class="option-text">A. 08.00 dan 14.00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q8" value="B">
+                            <span class="option-text">B. 10.00 dan 12.00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q8" value="C">
+                            <span class="option-text">C. Hanya 12.00</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q8" value="D">
+                            <span class="option-text">D. Semua jam aman</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q9 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        9. <b>Pengambilan Keputusan:</b> Kamu harus memilih rute untuk pulang.<br><br>
+                        - <b>Rute A:</b> Jarak 50 km, ombak tenang, kecepatan rata-rata 25 km/jam.<br>
+                        - <b>Rute B:</b> Jarak 30 km, ombak besar, kecepatan rata-rata 10 km/jam.<br><br>
+                        Rute mana yang akan membawamu sampai lebih cepat?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q9" value="A">
+                            <span class="option-text">A. Rute A (2 jam)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q9" value="B">
+                            <span class="option-text">B. Rute A (3 jam)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q9" value="C">
+                            <span class="option-text">C. Rute B (2 jam)</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q9" value="D">
+                            <span class="option-text">D. Rute B (3 jam)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Q10 -->
+                <div class="question-card">
+                    <div class="question-text">
+                        10. <b>Tantangan Logika (Bonus):</b> Harga rempah diprediksi akan NAIK 2x lipat besok, tapi
+                        peluang badai besok adalah 90%. Hari ini harga normal dan cuaca cerah. Sebagai pedagang yang
+                        bijak namun hati-hati, apa yang akan kamu lakukan?
+                    </div>
+                    <div class="options-grid">
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="A">
+                            <span class="option-text">A. Menunggu besok supaya untung besar, tidak peduli
+                                badai.</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="B">
+                            <span class="option-text">B. Menjual setengah hari ini, dan setengah besok (ambil risiko
+                                sebagian).</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="C">
+                            <span class="option-text">C. Menjual semua hari ini (keuntungan pasti, nol risiko
+                                badai).</span>
+                        </label>
+                        <label class="option-label" onclick="selectOption(this)">
+                            <input type="radio" name="q10" value="D">
+                            <span class="option-text">D. Tidak berdagang sama sekali.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="height: 1rem;"></div> <!-- Spacer -->
+                <button class="btn-primary" onclick="submitTest()">Kirim Jawaban! 🌟</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CUSTOM MODAL HTML -->
+    <div class="modal-overlay" id="custom-modal" onclick="hideModal()">
+        <div class="modal-card">
+            <div class="modal-text" id="modal-message">Pesan disini...</div>
+        </div>
+    </div>
+    <script>
+        // Data Store
+        const userData = {
+            name: '',
+            mode: 'Online',
+            program: 'math',
+            city: '',
+            branch: '',
+            teacher: '',
+            answers: {}
+        };
+
+        // Cache for Sheet Data
+        let appData = null;
+
+        // Web App URL for data
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyLEBGpAri8cZSDHeOoJRzf7-3c8RKHH1zNP2A4Fkl54NXROhFpegTYM3mEAL02Y_Co/exec";
+
+        window.onload = function () {
+            console.log("Fetching data from GAS...");
+            fetch(GAS_URL + '?program=math')
+                .then(response => response.json())
+                .then(data => {
+                    onDataReceived(data);
+                })
+                .catch(err => {
+                    onDataFail(err);
+                });
+        };
+
+        function onDataReceived(data) {
+            console.log('App Data Received:', data);
+            appData = data;
+            hideModal();
+            const overlay = document.getElementById('app-loading-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+            populateOnlineTeachers('math');
+            populateStudentNames();
+        }
+
+        function populateOnlineTeachers(prog) {
+            const teacherSelect = document.getElementById('input-teacher');
+            teacherSelect.innerHTML = '<option value="" disabled selected>Pilih Guru...</option>';
+            const onlineList = appData.onlineTeachers[prog] || [];
+            if (onlineList.length === 0) {
+                document.getElementById('group-teacher').style.display = 'none';
+            } else {
+                onlineList.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    teacherSelect.appendChild(opt);
+                });
+                document.getElementById('group-teacher').style.display = 'block';
+                if (onlineList.length === 1) {
+                    teacherSelect.value = onlineList[0];
+                    handleTeacherChange();
+                }
+            }
+        }
+
+        function handleTeacherChange() {
+            userData.teacher = document.getElementById('input-teacher').value;
+            checkFormCompletion();
+        }
+
+        let allStudentNames = [];
+
+        function populateStudentNames() {
+            const prog = userData.program;
+            const listContainer = document.getElementById('dropdown-list-name');
+            listContainer.innerHTML = '';
+            allStudentNames = [];
+            if (appData && appData.onlineStudents) {
+                allStudentNames = appData.onlineStudents[prog] || [];
+            }
+            if (allStudentNames.length === 0) {
+                renderDropdownItems([]);
+                document.getElementById('group-name').style.display = 'block';
+            } else {
+                renderDropdownItems(allStudentNames);
+                document.getElementById('group-name').style.display = 'block';
+            }
+        }
+
+        function renderDropdownItems(names) {
+            const listContainer = document.getElementById('dropdown-list-name');
+            listContainer.innerHTML = '';
+            names.sort();
+            names.forEach(name => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = name;
+                item.onclick = () => selectName(name);
+                listContainer.appendChild(item);
+            });
+            const manualItem = document.createElement('div');
+            manualItem.className = 'dropdown-item';
+            manualItem.innerHTML = '<b>✍️ Nama Tidak Ada / Input Manual</b>';
+            manualItem.style.color = '#00c6ff';
+            manualItem.onclick = () => selectName('manual_input');
+            listContainer.appendChild(manualItem);
+        }
+
+        function toggleDropdown() {
+            const list = document.getElementById('dropdown-list-name');
+            if (list.style.display === 'block') {
+                list.style.display = 'none';
+            } else {
+                list.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('click', function (e) {
+            const container = document.getElementById('group-name');
+            if (!container.contains(e.target)) {
+                document.getElementById('dropdown-list-name').style.display = 'none';
+            }
+        });
+
+        function filterNames() {
+            const input = document.getElementById('input-name-search');
+            const filter = input.value.toLowerCase();
+            const list = document.getElementById('dropdown-list-name');
+            list.style.display = 'block';
+            if (!filter) {
+                renderDropdownItems(allStudentNames);
+                return;
+            }
+            const filtered = allStudentNames.filter(name => name.toLowerCase().includes(filter));
+            renderDropdownItems(filtered);
+        }
+
+        function selectName(name) {
+            const searchInput = document.getElementById('input-name-search');
+            const list = document.getElementById('dropdown-list-name');
+            const manualContainer = document.getElementById('manual-name-container');
+            list.style.display = 'none';
+            if (name === 'manual_input') {
+                searchInput.value = "Manual Input";
+                userData.name = "";
+                manualContainer.style.display = 'block';
+                document.getElementById('input-name-manual').focus();
+            } else {
+                searchInput.value = name;
+                manualContainer.style.display = 'none';
+                userData.name = name;
+                document.getElementById('input-name-manual').value = "";
+            }
+            checkFormCompletion();
+        }
+
+        function checkFormCompletion() {
+            const manualContainer = document.getElementById('manual-name-container');
+            if (manualContainer.style.display === 'block') {
+                const manualVal = document.getElementById('input-name-manual').value;
+                userData.name = manualVal.trim();
+            }
+            const btn = document.getElementById('btn-start');
+            if (userData.name && userData.name.length > 0) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                btn.style.transform = 'scale(1.05)';
+            } else {
+                btn.style.opacity = '0.5';
+                btn.style.pointerEvents = 'none';
+                btn.style.transform = 'scale(1)';
+            }
+        }
+
+        function startQuiz() {
+            if (!userData.name) return;
+            const intro = document.getElementById('slide-intro');
+            const quiz = document.getElementById('slide-quiz');
+            intro.classList.remove('active');
+            intro.classList.add('exit');
+            setTimeout(() => {
+                intro.style.display = 'none';
+                quiz.style.display = 'flex';
+                void quiz.offsetWidth;
+                quiz.classList.remove('exit');
+                quiz.classList.add('active');
+            }, 500);
+        }
+
+        function selectOption(label) {
+            const group = label.parentElement;
+            const labels = group.querySelectorAll('.option-label');
+            labels.forEach(l => l.classList.remove('selected'));
+            label.classList.add('selected');
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+                const name = radio.name;
+                userData[name] = radio.value;
+                console.log("Selected:", name, userData[name]);
+            }
+        }
+
+        // ANSWER KEY (Math Voyager)
+        const answerKey = {
+            q1: 'B', q2: 'C', q3: 'A', q4: 'B', q5: 'B',
+            q6: 'D', q7: 'B', q8: 'B', q9: 'A', q10: 'C'
+        };
+
+        function calculateScore() {
+            let correct = 0;
+            for (let i = 1; i <= 10; i++) {
+                const key = `q${i}`;
+                if (userData[key] && userData[key] === answerKey[key]) {
+                    correct++;
+                }
+            }
+            return correct * 10;
+        }
+
+        function submitTest() {
+            const missing = [];
+            for (let i = 1; i <= 10; i++) {
+                if (!userData[`q${i}`]) missing.push(i);
+            }
+            if (missing.length > 0) {
+                showModal(`Opps! Kamu belum menjawab soal nomor: ${missing.join(', ')}`);
+                return;
+            }
+            const finalScore = calculateScore();
+            showModal("Sedang mengirim jawaban... 🚀", true);
+            const payload = {
+                type: 'pretest-t2', // CHANGED FROM posttest-t2
+                timestamp: new Date().toISOString(),
+                mode: userData.mode,
+                program: userData.program,
+                city: 'Online',
+                branch: 'Online',
+                teacher: userData.teacher,
+                name: userData.name,
+                score: finalScore,
+                q1: userData.q1, q2: userData.q2, q3: userData.q3, q4: userData.q4, q5: userData.q5,
+                q6: userData.q6, q7: userData.q7, q8: userData.q8, q9: userData.q9, q10: userData.q10
+            };
+            fetch(GAS_URL + '?program=math', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+            }).then(() => {
+                showModal(`Hore! Jawabanmu sudah terkirim! 🎉<br>Skor Kamu: ${finalScore}<br><br><button class="btn-primary" onclick="window.location.reload()" style="padding:0.5rem 1rem; font-size:1rem;">Main Lagi / Exit 🔄</button>`, true);
+                const btn = document.querySelector('button[onclick="submitTest()"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = "Terkirim!";
+                }
+            }).catch(err => {
+                console.error(err);
+                showModal("Yah, gagal mengirim. Coba lagi ya! 🥺");
+            });
+        }
+
+        function showModal(msg, persistent = false) {
+            const m = document.getElementById('custom-modal');
+            const t = document.getElementById('modal-message');
+            t.innerHTML = msg;
+            m.classList.add('open');
+            if (persistent) {
+                m.onclick = null;
+            } else {
+                m.onclick = hideModal;
+            }
+        }
+
+        function hideModal() {
+            document.getElementById('custom-modal').classList.remove('open');
+        }
+    </script>
+</body>
+
+</html>
